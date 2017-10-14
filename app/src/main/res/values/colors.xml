@@ -8,6 +8,11 @@
     <color name="textColorPrimary">#3a414d</color>
     <color name="textColorLight">#6f7c92</color>
 
+    <!-- Goal Getter Colors -->
+    <color name="progress_bar_base">#E6E6E6</color>
+    <color name="time_left_bar">#B3B3B3</color>
+    <color name="goal_progress_bar">#FFD505</color>
+
     <!-- Login -->
     <color name="colorButton">#1A00B2</color>
 
