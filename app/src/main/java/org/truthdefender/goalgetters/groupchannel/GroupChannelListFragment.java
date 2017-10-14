@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.sendbird.android.*;
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 
 import java.util.List;
 

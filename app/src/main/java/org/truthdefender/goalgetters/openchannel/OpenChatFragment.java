@@ -20,7 +20,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.sendbird.android.*;
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.utils.FileUtils;
 import org.truthdefender.goalgetters.utils.MediaPlayerActivity;
 import org.truthdefender.goalgetters.utils.PhotoViewerActivity;

@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.groupchannel.GroupChannelActivity;
 import org.truthdefender.goalgetters.openchannel.OpenChannelActivity;
 import org.truthdefender.goalgetters.utils.PreferenceUtils;

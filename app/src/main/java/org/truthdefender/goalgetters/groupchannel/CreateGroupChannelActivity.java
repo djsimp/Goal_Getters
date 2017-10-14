@@ -13,7 +13,7 @@ import android.widget.Button;
 
 import com.sendbird.android.GroupChannel;
 import com.sendbird.android.SendBirdException;
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 
 import java.util.ArrayList;
 import java.util.List;

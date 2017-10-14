@@ -31,7 +31,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 
 public class MediaPlayerActivity extends Activity implements
         OnBufferingUpdateListener, OnCompletionListener,

@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sendbird.android.OpenChannel;
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 
 import java.util.ArrayList;
 import java.util.List;

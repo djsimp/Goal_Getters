@@ -19,7 +19,7 @@ import com.sendbird.android.FileMessage;
 import com.sendbird.android.GroupChannel;
 import com.sendbird.android.SendBird;
 import com.sendbird.android.UserMessage;
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.utils.DateUtils;
 import org.truthdefender.goalgetters.utils.FileUtils;
 import org.truthdefender.goalgetters.utils.ImageUtils;

@@ -13,7 +13,7 @@ import com.sendbird.android.OpenChannel;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.User;
 import com.sendbird.android.UserListQuery;
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.groupchannel.UserListAdapter;
 
 import java.util.List;

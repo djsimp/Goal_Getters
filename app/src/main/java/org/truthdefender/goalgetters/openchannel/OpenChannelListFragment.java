@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import com.sendbird.android.OpenChannel;
 import com.sendbird.android.OpenChannelListQuery;
 import com.sendbird.android.SendBirdException;
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.sendbird.android.User;
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.utils.ImageUtils;
 
 import java.util.ArrayList;

@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 
 public class OpenChannelActivity extends AppCompatActivity{
 

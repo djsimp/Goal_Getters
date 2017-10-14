@@ -9,7 +9,7 @@ import android.widget.ProgressBar;
 
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 
 public class PhotoViewerActivity extends AppCompatActivity {
 

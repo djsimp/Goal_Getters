@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import com.sendbird.android.sample.R;
-
+import org.truthdefender.goalgetters.R;
 
 /**
  * A fragment displaying an option to set the channel as Distinct.

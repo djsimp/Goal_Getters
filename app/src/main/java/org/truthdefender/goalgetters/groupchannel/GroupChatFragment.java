@@ -43,7 +43,7 @@ import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.User;
 import com.sendbird.android.UserMessage;
-import com.sendbird.android.sample.R;
+import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.utils.FileUtils;
 import org.truthdefender.goalgetters.utils.MediaPlayerActivity;
 import org.truthdefender.goalgetters.utils.PhotoViewerActivity;
