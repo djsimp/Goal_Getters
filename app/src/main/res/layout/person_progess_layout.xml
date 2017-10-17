@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="?android:attr/selectableItemBackground">
+    <ImageView
+        android:id="@+id/profile_picture"
+        android:layout_margin="10dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/ic_portrait_black_24dp"/>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/profile_picture"
+        android:paddingTop="15dp"
+        android:paddingRight="15dp"
+        android:clickable="true"
+        >
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:id="@+id/person_name"
+            android:maxLines = "1"
+            android:text="Bobby: "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/person_name"
+            android:textSize="20dp"
+            android:maxLines="1"
+            android:id="@+id/goalText"
+            android:text="PLACE HOLDER GOal but what if it's really long i guess i found the right way to do it :)."/>
+
+        <View
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/goalText"
+            android:background="@drawable/progress_bar_base"/>
+
+
+
+        <View
+            android:id="@+id/goalProgress"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/goalText"
+            android:background="@drawable/progress_bar_goal"
+            />
+        <View
+            android:id="@+id/timeLeft"
+            android:layout_width="160dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/goalText"
+            android:background="@drawable/progress_bar_time_left"
+            android:alpha=".45"/>
+
+
+    </RelativeLayout>
+</RelativeLayout>
