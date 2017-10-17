@@ -9,6 +9,7 @@ import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
+
+
+        NumberPicker np =(NumberPicker) findViewById(R.id.number_picker);
+
+        np.setMinValue(0);
+        np.setMaxValue(1000000);
+        np.setWrapSelectorWheel(false);
 
         mLoginLayout = (CoordinatorLayout) findViewById(R.id.layout_login);
 

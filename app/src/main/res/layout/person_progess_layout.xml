@@ -25,6 +25,7 @@
             android:textSize="20dp"
             android:id="@+id/person_name"
             android:maxLines = "1"
+            android:ellipsize="end"
             android:text="Bobby: "/>
 
         <TextView
@@ -33,6 +34,7 @@
             android:layout_toRightOf="@id/person_name"
             android:textSize="20dp"
             android:maxLines="1"
+            android:ellipsize="end"
             android:id="@+id/goalText"
             android:text="PLACE HOLDER GOal but what if it's really long i guess i found the right way to do it :)."/>
 
@@ -47,7 +49,7 @@
 
         <View
             android:id="@+id/goalProgress"
-            android:layout_width="40dp"
+            android:layout_width="240dp"
             android:layout_height="40dp"
             android:layout_below="@+id/goalText"
             android:background="@drawable/progress_bar_goal"

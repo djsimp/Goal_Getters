@@ -54,6 +54,7 @@
     <string name="units">Units</string>
     <string name="create_goal">Create Goal</string>
     <string name="report_progress">REPORT PROGRESS</string>
+    <string name="description">Description</string>
 
 
 </resources>

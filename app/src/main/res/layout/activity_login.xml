@@ -91,5 +91,10 @@
         android:layout_gravity="center"
         android:visibility="invisible" />
 
+    <NumberPicker
+        android:id="@+id/number_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 
 </android.support.design.widget.CoordinatorLayout>
