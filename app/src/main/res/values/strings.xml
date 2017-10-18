@@ -20,6 +20,12 @@
     <!-- create goal -->
     <string name="create_goal_label">Create Goal</string>
 
+    <!-- goal -->
+    <string name="activity_goal_label">Goal Progress</string>
+    <string name="title_my_progress">My Progress</string>
+    <string name="title_members">Members</string>
+    <string name="title_chat">Chat</string>
+
     <!-- login -->
     <string name="login_user_id">User ID</string>
     <string name="login_user_nickname">Nickname</string>

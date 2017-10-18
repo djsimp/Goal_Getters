@@ -1,37 +1,27 @@
 package org.truthdefender.goalgetters.goals;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.truthdefender.goalgetters.R;
-import org.truthdefender.goalgetters.main.MainActivity;
 import org.truthdefender.goalgetters.model.Goal;
 import org.truthdefender.goalgetters.model.Person;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class MyGoalsFragment extends Fragment {
 
@@ -115,8 +105,8 @@ public class MyGoalsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 //                    PeopleEvents.get().setCurrentEvent(mEvent);
-//                    Intent intent = new Intent(getActivity(), MapActivity.class);
-//                    startActivity(intent);
+                    Intent intent = new Intent(getActivity(), GoalActivity.class);
+                    startActivity(intent);
                 }
             });
             mGoalTitle = (TextView)itemView.findViewById(R.id.goal_title);
@@ -147,7 +137,7 @@ public class MyGoalsFragment extends Fragment {
         @Override
         public GoalHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.goal_layout, parent, false);
+            View view = layoutInflater.inflate(R.layout.layout_goal, parent, false);
             return new GoalHolder(view);
         }
 

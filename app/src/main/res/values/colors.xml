@@ -14,6 +14,10 @@
     <color name="time_left_bar">#B3B3B3</color>
     <color name="goal_progress_bar">#FFD505</color>
 
+    <!-- Progress Log -->
+    <color name="positive_color">#2cb247</color>
+    <color name="negative_color">#f73838</color>
+
     <!-- Login -->
     <color name="colorButton">#1A00B2</color>
 

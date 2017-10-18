@@ -19,7 +19,7 @@
         android:background="@color/colorButton"
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
-        app:menu="@menu/navigation" />
+        app:menu="@menu/main_nav" />
 
     <FrameLayout
         android:id="@+id/main"
