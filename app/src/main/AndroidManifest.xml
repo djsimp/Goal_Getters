@@ -21,7 +21,9 @@
             </intent-filter>
         </activity>
         <activity android:name="org.truthdefender.goalgetters.main.MainActivity"
-            android:label="@string/select_channel_type"/>
+            android:label="@string/main_label"/>
+        <activity android:name="org.truthdefender.goalgetters.goals.CreateGoalActivity"
+            android:label="@string/create_goal_label"/>
         <activity android:name="org.truthdefender.goalgetters.utils.PhotoViewerActivity" />
         <activity
             android:name="org.truthdefender.goalgetters.utils.MediaPlayerActivity"

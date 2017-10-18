@@ -11,35 +11,63 @@
         android:layout_height="100dp"
         android:textAlignment="center"
         android:text="@string/my_goals_title"
-        android:textSize="45dp"/>
+        android:textSize="45sp"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:background="@color/colorAccent"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view"
-        android:scrollbars="vertical"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0dp"
+        android:layout_weight="0.95"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.05"></RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.9">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/my_recycler_view"
+                android:layout_width="fill_parent"
+                android:layout_height="400dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:scrollbars="vertical" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.05"></RelativeLayout>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.05">
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/create_goal_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:clickable="true"
+            android:color="@color/textColorWhite"
             app:backgroundTint="@color/colorButton"
-            android:text="+"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="11dp" />
 
     </RelativeLayout>
-
-
-
-
 
 </LinearLayout>

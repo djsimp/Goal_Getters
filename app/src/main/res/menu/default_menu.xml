@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/go_to_top_button"
+        android:icon="@drawable/go_to_top"
+        android:title="@string/back_arrow"
+        android:visible="true"
+        app:showAsAction="ifRoom"/>
+
+</menu>

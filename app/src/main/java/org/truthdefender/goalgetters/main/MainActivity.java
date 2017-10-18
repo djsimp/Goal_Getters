@@ -1,58 +1,81 @@
 package org.truthdefender.goalgetters.main;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.support.annotation.AnimatorRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.annotation.StyleRes;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import org.truthdefender.goalgetters.R;
+import org.truthdefender.goalgetters.goals.MyGoalsFragment;
 import org.truthdefender.goalgetters.groupchannel.GroupChannelActivity;
 import org.truthdefender.goalgetters.openchannel.OpenChannelActivity;
 import org.truthdefender.goalgetters.utils.PreferenceUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Toolbar mToolbar;
-    private NavigationView mNavView;
+    private BottomNavigationView menu;
+    private MyGoalsFragment myGoalsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FragmentManager fragmentManager = getFragmentManager();
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_main);
-        setSupportActionBar(mToolbar);
+        if(myGoalsFragment == null) {
+            myGoalsFragment = new MyGoalsFragment();
+        }
+        fragmentManager.beginTransaction()
+                .replace(R.id.main, myGoalsFragment)
+                .addToBackStack(null)
+                .commit();
 
-        mNavView = (NavigationView) findViewById(R.id.nav_view_main);
-        mNavView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-
-                if (id == R.id.nav_item_open_channels) {
-                    Intent intent = new Intent(MainActivity.this, OpenChannelActivity.class);
-                    startActivity(intent);
-                    return true;
-
-                } else if (id == R.id.nav_item_group_channels) {
-                    Intent intent = new Intent(MainActivity.this, GroupChannelActivity.class);
-                    startActivity(intent);
-                    return true;
-
-                } else if (id == R.id.nav_item_disconnect) {
-                    // Unregister push tokens and disconnect
-                    disconnect();
-                    return true;
+                FragmentManager menuFragmentManager = getFragmentManager();
+                switch(item.getItemId()) {
+                    case R.id.navigation_goals:
+                        menuFragmentManager.beginTransaction()
+                                .replace(R.id.main, myGoalsFragment)
+                                .addToBackStack(null)
+                                .commit();
+                        break;
+//                    case R.id.navigation_groups:
+//                        menuFragmentManager.beginTransaction()
+//                                .replace(R.id.main, myGroupsFragment)
+//                                .addToBackStack(null)
+//                                .commit();
+//                        break;
+//                    case R.id.navigation_past_goals:
+//                        menuFragmentManager.beginTransaction()
+//                                .replace(R.id.main, myPastGoalsFragment)
+//                                .addToBackStack(null)
+//                                .commit();
+//                        break;
                 }
-
-                return false;
+                return true;
             }
         });
 

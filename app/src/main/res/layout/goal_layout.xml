@@ -1,49 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_item_goal"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:padding="15dp"
     android:clickable="true"
     android:background="?android:attr/selectableItemBackground">
 
-
     <TextView
+        android:id="@+id/goal_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:id="@+id/goalText"
+        android:textSize="25dp"
         android:text="PLACE HOLDER GOAL NAME"/>
 
-    <View
-        android:id="@+id/progress_bar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/goalText"
-        android:background="@drawable/progress_bar_base"/>
+        android:layout_height="40dp">
 
+        <View
+            android:id="@+id/goal_total_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/progress_bar_base"/>
 
+        <View
+            android:id="@+id/progress_bar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/progress_bar_goal" />
 
-    <View
-        android:id="@+id/goalProgress"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/goalText"
-        android:background="@drawable/progress_bar_goal"
-        />
-    <View
-        android:id="@+id/timeLeft"
-        android:layout_width="160dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/goalText"
-        android:background="@drawable/progress_bar_time_left"
-        android:alpha=".45"/>
-    <TextView
+        <View
+            android:id="@+id/inv_progress_bar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_alignParentTop="true"
+            android:layout_alignEnd="@id/progress_bar"
+            android:layout_alignRight="@id/progress_bar" />
+
+        <View
+            android:id="@+id/to_date_bar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/progress_bar_time_left"
+            android:alpha=".45"/>
+
+        <View
+            android:id="@+id/inv_to_date_bar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@id/to_date_bar"
+            android:layout_alignEnd="@id/to_date_bar" />
+
+    </RelativeLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/progress_bar"
-        android:text="19 days left"
-        android:textSize="15dp"
-        android:layout_marginLeft="160dp"/>
+        android:layout_height="wrap_content">
 
+        <RelativeLayout
+            android:id="@+id/left_of_days_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4"></RelativeLayout>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/days_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/goal_total_bar"
+            android:layout_alignRight="@id/to_date_bar"
+            android:text="19 days left"
+            android:textSize="15dp"
+            android:layout_marginLeft="160dp"/>
+
+        <RelativeLayout
+            android:id="@+id/right_of_days_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"></RelativeLayout>
+    </LinearLayout>
+</LinearLayout>
