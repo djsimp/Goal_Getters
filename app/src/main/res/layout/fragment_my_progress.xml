@@ -3,16 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <FrameLayout
-        android:id="@+id/main_goal_frame"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@color/colorAccent"/>
-
-    <FrameLayout
         android:id="@+id/my_progress_frame"
         android:layout_width="match_parent"
         android:layout_height="100dp"/>
@@ -25,6 +15,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textStyle="bold"
             android:text="My Progress Log"/>
 
         <android.support.v7.widget.RecyclerView
@@ -46,11 +38,6 @@
             android:textColor="@color/textColorWhite"
             android:layout_alignParentBottom="true" />
 
-
-
-
     </LinearLayout>
-
-
 
 </LinearLayout>

@@ -52,9 +52,13 @@
     <string name="goal_name">Goal Name</string>
     <string name="deadline">Deadline</string>
     <string name="units">Units</string>
+
+
+    <!-- Goal Getters -->
     <string name="create_goal">Create Goal</string>
     <string name="report_progress">REPORT PROGRESS</string>
     <string name="description">Description</string>
+    <string name="my_goals_title">My Goals</string>
 
 
 </resources>
