@@ -21,24 +21,15 @@ public class CreateGoalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_goal);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_create_goal);
         setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home ) {
-            finish();
-            return true;
-        }
-        // other menu select events may be present here
-
-        return super.onOptionsItemSelected(item);
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        super.onCreateOptionsMenu(menu);
-//        menu.clear();
-//        getMenuInflater().inflate(R.menu.default_menu, menu);
-//        return true;
-//    }
 }
