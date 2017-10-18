@@ -28,44 +28,46 @@
             android:layout_alignParentTop="true"
             android:background="@drawable/progress_bar_base"/>
 
-        <View
-            android:id="@+id/progress_bar"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/progress_bar_goal" />
+            android:layout_alignParentTop="true">
 
-        <View
-            android:id="@+id/inv_progress_bar"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:layout_alignParentTop="true"
-            android:layout_alignEnd="@id/progress_bar"
-            android:layout_alignRight="@id/progress_bar" />
+            <View
+                android:id="@+id/progress_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@drawable/progress_bar_goal" />
 
-        <View
-            android:id="@+id/to_date_bar"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.4"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/progress_bar_time_left"
-            android:alpha=".45"/>
+            <View
+                android:id="@+id/inv_progress_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"/>
 
-        <View
-            android:id="@+id/inv_to_date_bar"
-            android:layout_width="0dp"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.6"
-            android:layout_alignParentTop="true"
-            android:layout_alignRight="@id/to_date_bar"
-            android:layout_alignEnd="@id/to_date_bar" />
+            android:layout_alignParentTop="true">
+
+            <View
+                android:id="@+id/to_date_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:background="@drawable/progress_bar_time_left"
+                android:alpha=".45"/>
+
+            <View
+                android:id="@+id/inv_to_date_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -77,22 +79,20 @@
             android:id="@+id/left_of_days_left"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.4"></RelativeLayout>
+            android:layout_weight="0.3"></RelativeLayout>
 
         <TextView
             android:id="@+id/days_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/goal_total_bar"
-            android:layout_alignRight="@id/to_date_bar"
             android:text="19 days left"
-            android:textSize="15dp"
-            android:layout_marginLeft="160dp"/>
+            android:textSize="15dp"/>
 
         <RelativeLayout
             android:id="@+id/right_of_days_left"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.6"></RelativeLayout>
+            android:layout_weight="0.7"></RelativeLayout>
     </LinearLayout>
 </LinearLayout>
