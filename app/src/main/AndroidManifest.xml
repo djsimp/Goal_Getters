@@ -26,6 +26,8 @@
             android:label="@string/create_goal_label"/>
         <activity android:name="org.truthdefender.goalgetters.goals.GoalActivity"
             android:label="@string/activity_goal_label"/>
+        <activity android:name="org.truthdefender.goalgetters.goals.ReportProgressActivity"
+            android:label="@string/report_progress_label"/>
         <activity android:name="org.truthdefender.goalgetters.utils.PhotoViewerActivity" />
         <activity
             android:name="org.truthdefender.goalgetters.utils.MediaPlayerActivity"

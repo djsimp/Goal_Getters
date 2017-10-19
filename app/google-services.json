@@ -1,31 +1,35 @@
 {
   "project_info": {
-    "project_number": "984140644677",
-    "firebase_url": "https://sendbird-sample.firebaseio.com",
-    "project_id": "sendbird-sample",
-    "storage_bucket": "sendbird-sample.appspot.com"
+    "project_number": "926873233244",
+    "firebase_url": "https://goal-getters-10014.firebaseio.com",
+    "project_id": "goal-getters-10014",
+    "storage_bucket": "goal-getters-10014.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:984140644677:android:abe06d49c04fba23",
+        "mobilesdk_app_id": "1:926873233244:android:6550d60c0ec31c7d",
         "android_client_info": {
-          "package_name": "com.sendbird.android.sample"
+          "package_name": "org.truthdefender.goalgetters"
         }
       },
       "oauth_client": [
         {
-          "client_id": "984140644677-75b8ti7rnl9ojhu930phht25emuifkki.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "926873233244-v472r4u41c786e1vc8cp2mo512jvauol.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.truthdefender.goalgetters",
+            "certificate_hash": "7faf4b3a2d91e852cb422fe6074fce18229c30e1"
+          }
         },
         {
-          "client_id": "984140644677-ajrt7j1g982mntarduj22mlq1dberha0.apps.googleusercontent.com",
+          "client_id": "926873233244-bicqi6tubg6pv8plug1m65rvfhbs4410.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDxYBEWhz5XUP8twJaGDE249SlEQUfalIc"
+          "current_key": "AIzaSyAxmr_qWLeVXW3zEsROD4GdPUDT2bzwXew"
         }
       ],
       "services": {
@@ -33,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "926873233244-bicqi6tubg6pv8plug1m65rvfhbs4410.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

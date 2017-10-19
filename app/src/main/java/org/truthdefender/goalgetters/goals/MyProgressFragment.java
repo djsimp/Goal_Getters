@@ -19,6 +19,7 @@ import android.widget.TextView;
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Goal;
 import org.truthdefender.goalgetters.model.Person;
+import org.truthdefender.goalgetters.model.Progress;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,8 +48,8 @@ public class MyProgressFragment extends Fragment {
         reportProgressButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), ReportProgressActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getActivity(), ReportProgressActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -64,13 +65,13 @@ public class MyProgressFragment extends Fragment {
     }
 
 
-    private List<String> generateProgress() {
-        List<String> log = new ArrayList<>();
+    private List<Progress> generateProgress() {
+        List<Progress> log = new ArrayList<>();
         for(int i = 0; i < 15; i++) {
             if(i%2 == 0) {
-                log.add("+$150 - I am making some great progress!");
+                log.add(new Progress("October 20, 2017", "+$150 - I am making some great progress!"));
             } else {
-                log.add("-$100 - Another one bites the dust!");
+                log.add(new Progress("October 20, 2017", "-$100 - Another one bites the dust!"));
             }
         }
         return log;
@@ -79,7 +80,7 @@ public class MyProgressFragment extends Fragment {
     //Recycler view copy
 
     private void updateUI() {
-        List<String> log = generateProgress();
+        List<Progress> log = generateProgress();
 
         ProgressAdapter mProgressAdapter = new ProgressAdapter(log);
         mProgressLogRecyclerView.setAdapter(mProgressAdapter);
@@ -88,44 +89,47 @@ public class MyProgressFragment extends Fragment {
 
     private class ProgressHolder extends RecyclerView.ViewHolder {
 
-        private TextView mProgressItem;
+        private TextView mProgressItemDate;
+        private TextView mProgressItemText;
 
-        private String mProgress;
+        private Progress mProgress;
 
         private ProgressHolder(View itemView) {
             super(itemView);
-            mProgressItem = (TextView)itemView.findViewById(R.id.progress_log_item);
+            mProgressItemDate = (TextView)itemView.findViewById(R.id.progress_item_date);
+            mProgressItemText = (TextView)itemView.findViewById(R.id.progress_item_text);
         }
 
-        private void bindGoal(String progress) {
+        private void bindGoal(Progress progress) {
             mProgress = progress;
-            mProgressItem.setText(progress);
-            if(progress.startsWith("+")) {
-                mProgressItem.setTextColor(getResources().getColor(R.color.positive_color));
+            mProgressItemDate.setText(progress.getDate());
+            mProgressItemText.setText(progress.getReport());
+            if(progress.getReport().startsWith("+")) {
+                mProgressItemText.setTextColor(getResources().getColor(R.color.positive_color));
             } else {
-                mProgressItem.setTextColor(getResources().getColor(R.color.negative_color));
+                mProgressItemText.setTextColor(getResources().getColor(R.color.negative_color));
             }
         }
     }
 
     private class ProgressAdapter extends RecyclerView.Adapter<ProgressHolder> {
 
-        private List<String> mLogs;
+        private List<Progress> mLogs;
 
-        private ProgressAdapter(List<String> logs) {
+        private ProgressAdapter(List<Progress> logs) {
             mLogs = logs;
         }
 
         @Override
         public ProgressHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.item_progress_log, parent, false);
+            View view = layoutInflater.inflate(R.layout.progress_item, parent, false);
             return new ProgressHolder(view);
         }
 
         @Override
         public void onBindViewHolder(ProgressHolder holder, int position) {
-            String log = mLogs.get(position);
+            Progress log = mLogs.get(position);
             holder.bindGoal(log);
         }
 
