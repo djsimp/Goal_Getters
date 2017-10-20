@@ -34,13 +34,6 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
 
-
-        NumberPicker np =(NumberPicker) findViewById(R.id.number_picker);
-
-        np.setMinValue(0);
-        np.setMaxValue(1000000);
-        np.setWrapSelectorWheel(false);
-
         mLoginLayout = (CoordinatorLayout) findViewById(R.id.layout_login);
 
         mUserIdConnectEditText = (TextInputEditText) findViewById(R.id.edittext_login_user_id);

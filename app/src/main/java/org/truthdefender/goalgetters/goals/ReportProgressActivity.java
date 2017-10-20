@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.NumberPicker;
 
 import org.truthdefender.goalgetters.R;
 
@@ -19,6 +20,11 @@ public class ReportProgressActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_progress);
+        NumberPicker np =(NumberPicker) findViewById(R.id.number_picker);
+
+        np.setMinValue(0);
+        np.setMaxValue(1000000);
+        np.setWrapSelectorWheel(false);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_report_progress);
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) {
