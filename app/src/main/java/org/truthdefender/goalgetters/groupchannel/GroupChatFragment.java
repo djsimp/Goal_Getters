@@ -301,7 +301,7 @@ public class GroupChatFragment extends Fragment {
             if (SendBird.reconnect()) {
                 // Will call onReconnectSucceeded()
             } else {
-                String userId = PreferenceUtils.getUserId(getActivity());
+                String userId = PreferenceUtils.getUsername(getActivity());
                 if (userId == null) {
                     Toast.makeText(getActivity(), "Require user ID to connect to SendBird.", Toast.LENGTH_LONG).show();
                     return;

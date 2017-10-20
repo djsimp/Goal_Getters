@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 
 public class PreferenceUtils {
 
-    public static final String PREFERENCE_KEY_USER_ID = "userId";
-    public static final String PREFERENCE_KEY_NICKNAME = "nickname";
+    public static final String PREFERENCE_KEY_USERNAME = "username";
+    public static final String PREFERENCE_KEY_PASSWORD = "password";
     public static final String PREFERENCE_KEY_CONNECTED = "connected";
 
     // Prevent instantiation
@@ -15,25 +15,25 @@ public class PreferenceUtils {
     }
 
     public static SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences("sendbird", Context.MODE_PRIVATE);
+        return context.getSharedPreferences("goal getters", Context.MODE_PRIVATE);
     }
 
-    public static void setUserId(Context context, String userId) {
+    public static void setUsername(Context context, String username) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.putString(PREFERENCE_KEY_USER_ID, userId).apply();
+        editor.putString(PREFERENCE_KEY_USERNAME, username).apply();
     }
 
-    public static String getUserId(Context context) {
-        return getSharedPreferences(context).getString(PREFERENCE_KEY_USER_ID, "");
+    public static String getUsername(Context context) {
+        return getSharedPreferences(context).getString(PREFERENCE_KEY_USERNAME, "");
     }
 
-    public static void setNickname(Context context, String nickname) {
+    public static void setPassword(Context context, String password) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.putString(PREFERENCE_KEY_NICKNAME, nickname).apply();
+        editor.putString(PREFERENCE_KEY_PASSWORD, password).apply();
     }
 
-    public static String getNickname(Context context) {
-        return getSharedPreferences(context).getString(PREFERENCE_KEY_NICKNAME, "");
+    public static String getPassword(Context context) {
+        return getSharedPreferences(context).getString(PREFERENCE_KEY_PASSWORD, "");
     }
 
     public static void setConnected(Context context, boolean tf) {

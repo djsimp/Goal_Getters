@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Goal Getters</string>
+    <string name="logo_description">Goal Getters Logo</string>
 
     <!-- all -->
     <string name="all_app_version">Sample UI v%1$s / SDK v%2$s</string>
@@ -19,6 +20,7 @@
 
     <!-- create goal -->
     <string name="create_goal_label">Create Goal</string>
+    <string name="prompt_username">Username</string>
 
     <!-- goal -->
     <string name="activity_goal_label">Goal Progress</string>
@@ -29,11 +31,22 @@
     <!-- report progress -->
     <string name="report_progress_label">Report Progress</string>
 
-    <!-- login -->
-    <string name="login_user_id">User ID</string>
-    <string name="login_user_nickname">Nickname</string>
+    <!-- login or create account -->
+    <string name="login_username">Username</string>
     <string name="login_password">Password</string>
-    <string name="login_connect">Connect</string>
+    <string name="login_sign_in">Sign In</string>
+    <string name="login_create_account">Create Account</string>
+    <string name="create_account_label">Create Account</string>
+    <string name="title_activity_create_account">Create Account</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 
     <!-- Menu -->
     <string name="title_goals">Goals</string>

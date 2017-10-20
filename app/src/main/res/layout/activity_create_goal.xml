@@ -18,7 +18,7 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_goal_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -27,6 +27,8 @@
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/edittext_goal_name"
                 android:hint="@string/goal_name"
+                android:keyTextSize="40sp"
+                android:textSize="40sp"
                 android:inputType="textVisiblePassword"
                 android:imeOptions="actionDone"
                 android:layout_width="match_parent"
