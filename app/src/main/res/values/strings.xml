@@ -37,6 +37,7 @@
     <string name="login_sign_in">Sign In</string>
     <string name="login_create_account">Create Account</string>
     <string name="create_account_label">Create Account</string>
+    <string name="join_label">Join Goal Getters</string>
     <string name="title_activity_create_account">Create Account</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -47,6 +48,9 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!-- select profile icon -->
+    <string name="select_icon_label">Select Your Profile Icon</string>
 
     <!-- Menu -->
     <string name="title_goals">Goals</string>
@@ -96,6 +100,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_select_icon">SelectIconActivity</string>
 
 
 </resources>

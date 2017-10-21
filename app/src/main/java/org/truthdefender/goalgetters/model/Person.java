@@ -5,5 +5,19 @@ package org.truthdefender.goalgetters.model;
  */
 
 public class Person {
-    Person(){}
+   String username;
+
+   public Person(String username) {
+      this.username = username;
+   }
+
+   public Person(){}
+
+   public String getUsername() {
+      return username;
+   }
+
+   public void setUsername(String username) {
+      this.username = username;
+   }
 }

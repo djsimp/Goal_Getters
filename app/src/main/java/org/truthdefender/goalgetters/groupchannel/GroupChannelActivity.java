@@ -2,8 +2,8 @@ package org.truthdefender.goalgetters.groupchannel;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -28,7 +28,7 @@ public class GroupChannelActivity extends AppCompatActivity{
             // If started from launcher, load list of Open Channels
             Fragment fragment = GroupChannelListFragment.newInstance();
 
-            FragmentManager manager = getSupportFragmentManager();
+            FragmentManager manager = getFragmentManager();
             manager.popBackStack();
 
             manager.beginTransaction()
@@ -40,7 +40,7 @@ public class GroupChannelActivity extends AppCompatActivity{
         if(channelUrl != null) {
             // If started from notification
             Fragment fragment = GroupChatFragment.newInstance(channelUrl);
-            FragmentManager manager = getSupportFragmentManager();
+            FragmentManager manager = getFragmentManager();
             manager.beginTransaction()
                     .replace(R.id.container_group_channel, fragment)
                     .addToBackStack(null)

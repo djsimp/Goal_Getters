@@ -8,13 +8,14 @@ import java.util.List;
  */
 
 public class Goal {
-    String title;
-    String units;
-    int goal;
-    int progress;
-    Date deadline;
-    Date startdate;
-    List<Person> group;
+    private String title;
+    private String units;
+    private int goal;
+    private int progress;
+    private Date deadline;
+    private Date startdate;
+    private List<Person> group;
+    private List<Progress> progress_log;
 
     public Goal(String title, String units, int goal, int progress, Date deadline, Date startdate, List<Person> group) {
         this.title = title;
@@ -80,5 +81,17 @@ public class Goal {
 
     public void setGroup(List<Person> group) {
         this.group = group;
+    }
+
+    public List<Progress> getProgressLog() {
+        return progress_log;
+    }
+
+    public void setProgressLog(List<Progress> progress_log) {
+        this.progress_log = progress_log;
+    }
+
+    public void addProgressToLog(Progress progress) {
+        this.progress_log.add(progress);
     }
 }

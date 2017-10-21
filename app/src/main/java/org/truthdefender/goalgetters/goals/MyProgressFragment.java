@@ -86,32 +86,6 @@ public class MyProgressFragment extends Fragment {
         mProgressLogRecyclerView.setAdapter(mProgressAdapter);
     }
 
-
-    private class ProgressHolder extends RecyclerView.ViewHolder {
-
-        private TextView mProgressItemDate;
-        private TextView mProgressItemText;
-
-        private Progress mProgress;
-
-        private ProgressHolder(View itemView) {
-            super(itemView);
-            mProgressItemDate = (TextView)itemView.findViewById(R.id.progress_item_date);
-            mProgressItemText = (TextView)itemView.findViewById(R.id.progress_item_text);
-        }
-
-        private void bindGoal(Progress progress) {
-            mProgress = progress;
-            mProgressItemDate.setText(progress.getDate());
-            mProgressItemText.setText(progress.getReport());
-            if(progress.getReport().startsWith("+")) {
-                mProgressItemText.setTextColor(getResources().getColor(R.color.positive_color));
-            } else {
-                mProgressItemText.setTextColor(getResources().getColor(R.color.negative_color));
-            }
-        }
-    }
-
     private class ProgressAdapter extends RecyclerView.Adapter<ProgressHolder> {
 
         private List<Progress> mLogs;
@@ -136,6 +110,31 @@ public class MyProgressFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mLogs.size();
+        }
+    }
+
+    private class ProgressHolder extends RecyclerView.ViewHolder {
+
+        private TextView mProgressItemDate;
+        private TextView mProgressItemText;
+
+        private Progress mProgress;
+
+        private ProgressHolder(View itemView) {
+            super(itemView);
+            mProgressItemDate = (TextView)itemView.findViewById(R.id.progress_item_date);
+            mProgressItemText = (TextView)itemView.findViewById(R.id.progress_item_text);
+        }
+
+        private void bindGoal(Progress progress) {
+            mProgress = progress;
+            mProgressItemDate.setText(progress.getDate());
+            mProgressItemText.setText(progress.getReport());
+            if(progress.getReport().startsWith("+")) {
+                mProgressItemText.setTextColor(getResources().getColor(R.color.positive_color));
+            } else {
+                mProgressItemText.setTextColor(getResources().getColor(R.color.negative_color));
+            }
         }
     }
 }

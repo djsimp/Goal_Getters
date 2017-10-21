@@ -33,7 +33,7 @@
             android:label="@string/create_goal_label" />
         <activity
             android:name=".main.CreateAccountActivity"
-            android:label="@string/title_activity_create_account"/>
+            android:label="@string/title_activity_create_account" />
         <activity
             android:name=".goals.GoalActivity"
             android:label="@string/activity_goal_label" />
@@ -73,6 +73,10 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".main.SelectIconActivity"
+            android:label="@string/select_icon_label"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
