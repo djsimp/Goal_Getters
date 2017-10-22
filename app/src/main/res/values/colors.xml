@@ -13,6 +13,7 @@
     <color name="progress_bar_base">#E6E6E6</color>
     <color name="time_left_bar">#B3B3B3</color>
     <color name="goal_progress_bar">#FFD505</color>
+    <color name="notify_red">#F44336</color>
 
     <!-- Progress Log -->
     <color name="positive_color">#2cb247</color>

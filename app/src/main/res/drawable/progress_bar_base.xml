@@ -6,7 +6,6 @@
     <solid
         android:color="@color/progress_bar_base"/>
 
-
     <padding
         android:left="5dp"
         android:top="5dp"

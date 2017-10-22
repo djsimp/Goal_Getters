@@ -39,7 +39,7 @@ public class MyGoalsFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.fragment_my_goals, container, false);
 
-        mGoalsRecyclerView = (RecyclerView)v.findViewById(R.id.my_recycler_view);
+        mGoalsRecyclerView = (RecyclerView)v.findViewById(R.id.my_goals_recycler_view);
         mGoalsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         createGoalButton = (FloatingActionButton)v.findViewById(R.id.create_goal_button);
@@ -137,7 +137,7 @@ public class MyGoalsFragment extends Fragment {
         @Override
         public GoalHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.layout_goal, parent, false);
+            View view = layoutInflater.inflate(R.layout.layout_goal_card, parent, false);
             return new GoalHolder(view);
         }
 

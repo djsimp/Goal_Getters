@@ -8,7 +8,7 @@
     <include layout="@layout/section_title"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_goals_recycler_view"
+        android:id="@+id/my_groups_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.77"
@@ -20,13 +20,12 @@
         android:layout_weight="0.1">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/create_goal_button"
+            android:id="@+id/create_group_button"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:clickable="true"
             android:src="@drawable/plus_icon"
             android:tint="@color/textColorWhite"
-            app:rippleColor="@color/textColorWhite"
             app:backgroundTint="@color/colorButton"
             app:borderWidth="0dp"
             android:layout_centerHorizontal="true"

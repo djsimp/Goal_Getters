@@ -26,6 +26,7 @@ import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.goals.MyGoalsFragment;
+import org.truthdefender.goalgetters.goals.MyGroupsFragment;
 import org.truthdefender.goalgetters.groupchannel.GroupChannelActivity;
 import org.truthdefender.goalgetters.openchannel.OpenChannelActivity;
 import org.truthdefender.goalgetters.utils.PreferenceUtils;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView menu;
     private MyGoalsFragment myGoalsFragment;
+    private MyGroupsFragment myGroupsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
         if(myGoalsFragment == null) {
             myGoalsFragment = new MyGoalsFragment();
+        }
+        if(myGroupsFragment == null) {
+            myGroupsFragment = new MyGroupsFragment();
         }
         fragmentManager.beginTransaction()
                 .replace(R.id.main, myGoalsFragment)
@@ -62,12 +67,12 @@ public class MainActivity extends AppCompatActivity {
                                 .addToBackStack(null)
                                 .commit();
                         break;
-//                    case R.id.navigation_groups:
-//                        menuFragmentManager.beginTransaction()
-//                                .replace(R.id.main, myGroupsFragment)
-//                                .addToBackStack(null)
-//                                .commit();
-//                        break;
+                    case R.id.navigation_groups:
+                        menuFragmentManager.beginTransaction()
+                                .replace(R.id.main, myGroupsFragment)
+                                .addToBackStack(null)
+                                .commit();
+                        break;
 //                    case R.id.navigation_past_goals:
 //                        menuFragmentManager.beginTransaction()
 //                                .replace(R.id.main, myPastGoalsFragment)

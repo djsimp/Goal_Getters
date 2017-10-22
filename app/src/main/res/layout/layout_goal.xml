@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_item_goal"
+<LinearLayout android:id="@+id/list_item_goal"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="15dp"
+    android:padding="10dp"
     android:clickable="false"
-    android:background="?android:attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
         android:id="@+id/goal_title"
@@ -57,15 +57,15 @@
                 android:id="@+id/to_date_bar"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
+                android:layout_weight="0.7"
                 android:background="@drawable/progress_bar_time_left"
-                android:alpha=".45"/>
+                android:elevation="1dp" />
 
             <View
                 android:id="@+id/inv_to_date_bar"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.7" />
+                android:layout_weight="0.3" />
 
         </LinearLayout>
 
@@ -79,7 +79,7 @@
             android:id="@+id/left_of_days_left"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.3"></RelativeLayout>
+            android:layout_weight="0.3"/>
 
         <TextView
             android:id="@+id/days_left"
@@ -93,6 +93,6 @@
             android:id="@+id/right_of_days_left"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.7"></RelativeLayout>
+            android:layout_weight="0.7"/>
     </LinearLayout>
 </LinearLayout>

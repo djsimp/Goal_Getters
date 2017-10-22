@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark">
 
     <TextView
         android:id="@+id/section_title_text"
@@ -10,6 +11,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="25dp"
         android:paddingBottom="25dp"
+        android:textColor="@color/textColorWhite"
         android:text="@string/my_goals_title"
         android:textAlignment="center"
         android:textSize="45sp" />
@@ -17,7 +19,7 @@
     <View
         android:id="@+id/section_title_bar"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="8dp"
         android:background="@color/colorAccent" />
 
 </LinearLayout>
