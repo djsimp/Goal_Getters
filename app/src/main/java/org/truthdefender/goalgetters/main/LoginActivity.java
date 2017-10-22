@@ -2,31 +2,41 @@ package org.truthdefender.goalgetters.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.User;
 import org.truthdefender.goalgetters.R;
+import org.truthdefender.goalgetters.model.Singleton;
 import org.truthdefender.goalgetters.utils.PreferenceUtils;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = "LoginActivity";
     private TextView mSectionTitle;
     private CoordinatorLayout mLoginLayout;
-    private TextInputEditText mUsername, mPassword;
+    private TextInputEditText mEmail, mPassword;
     private Button mSignInButton, mCreateAccountButton;
     private ContentLoadingProgressBar mProgressBar;
+
 
 
     @Override
@@ -43,17 +53,17 @@ public class LoginActivity extends AppCompatActivity {
         mSectionTitle.setTextSize(80);
         mSectionTitle.setHeight(200);
 
-        mUsername = (TextInputEditText) findViewById(R.id.edittext_login_username);
+        mEmail = (TextInputEditText) findViewById(R.id.edittext_login_username);
         mPassword = (TextInputEditText) findViewById(R.id.edittext_login_password);
 
-        mUsername.setText(PreferenceUtils.getUsername(this));
+        mEmail.setText(PreferenceUtils.getUsername(this));
         mPassword.setText(PreferenceUtils.getPassword(this));
 
         mSignInButton = (Button) findViewById(R.id.button_sign_in);
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = mUsername.getText().toString();
+                String username = mEmail.getText().toString();
                 // Remove all spaces from userID
                 username = username.replaceAll("\\s", "");
 
@@ -62,8 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                 PreferenceUtils.setUsername(LoginActivity.this, username);
                 PreferenceUtils.setPassword(LoginActivity.this, password);
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+                signIn(mEmail.getText().toString(), mPassword.getText().toString());
                // connectToGoalGetters(username, password);
 
             }
@@ -75,19 +84,41 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
                 startActivity(intent);
-
             }
         });
 
         // A loading indicator
         mProgressBar = (ContentLoadingProgressBar) findViewById(R.id.progress_bar_login);
+
+        Singleton.get().setmAuth(FirebaseAuth.getInstance());
+
+        Singleton.get().setmAuthListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        });
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
-        if(PreferenceUtils.getConnected(this)) {
-            connectToGoalGetters(PreferenceUtils.getUsername(this), PreferenceUtils.getPassword(this));
+        Singleton.get().getmAuth().addAuthStateListener(Singleton.get().getmAuthListener());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Singleton.get().getmAuthListener() != null) {
+            Singleton.get().getmAuth().removeAuthStateListener(Singleton.get().getmAuthListener());
         }
     }
 
@@ -133,6 +164,32 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void signIn(String email, String password) {
+        Log.d(TAG, "signIn:" + email);
+
+        Singleton.get().getmAuth().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = Singleton.get().getmAuth().getCurrentUser();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            //updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            //updateUI(null);
+                        }
+                    }
+                });
+        // [END sign_in_with_email]
     }
 
     /**
