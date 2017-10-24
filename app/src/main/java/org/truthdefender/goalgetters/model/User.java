@@ -1,5 +1,8 @@
 package org.truthdefender.goalgetters.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by dj on 10/19/17.
  */
@@ -8,18 +11,28 @@ public class User {
 
     private String name;
     private String email;
-    private String password;
-    private String profileImageTag;
+    private int profileImageTag;
+    private List<Group> groups;
+    private List<Goal> goals;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String name, String email, String password, String profileImageTag) {
+    public User(String name, String email, int profileImageTag, List<Group> groups, List<Goal> goals) {
         this.name = name;
         this.email = email;
-        this.password = password;
         this.profileImageTag = profileImageTag;
+        this.groups = groups;
+        this.goals = goals;
+    }
+
+    public User(String name, String email, int profileImageTag) {
+        this.name = name;
+        this.email = email;
+        this.profileImageTag = profileImageTag;
+        this.groups = new ArrayList<>();
+        this.goals = new ArrayList<>();
     }
 
     public String getName() {
@@ -38,19 +51,35 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getProfileImageTag() {
+    public int getProfileImageTag() {
         return profileImageTag;
     }
 
-    public void setProfileImageTag(String profileImageTag) {
+    public void setProfileImageTag(int profileImageTag) {
         this.profileImageTag = profileImageTag;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    public void addGroup(Group group) {
+        groups.add(group);
+    }
+
+    public List<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(List<Goal> goals) {
+        this.goals = goals;
+    }
+
+    public void addGoal(Goal goal) {
+        goals.add(goal);
     }
 }

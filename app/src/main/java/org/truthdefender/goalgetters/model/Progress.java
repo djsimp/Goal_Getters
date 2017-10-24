@@ -13,6 +13,8 @@ public class Progress {
         this.report = report;
     }
 
+    public Progress() {}
+
     public String getDate() {
         return date;
     }

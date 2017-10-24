@@ -66,7 +66,7 @@ public class MyGroupsFragment extends Fragment {
     private List<Group> generateGroups() {
         List<Group> groups = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
-            groups.add(new Group(null, "The Group Who Shall Not Be Named"));
+            groups.add(new Group("The Group Who Shall Not Be Named", null, null));
         }
         return groups;
     }

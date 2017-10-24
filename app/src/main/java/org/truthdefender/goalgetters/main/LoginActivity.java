@@ -81,8 +81,10 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                Singleton.get().setUser(new User(null, _emailText.getText().toString(), Singleton.get().getThumbIds()[0]));
                 Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

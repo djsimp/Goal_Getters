@@ -7,13 +7,17 @@ import java.util.List;
  */
 
 public class Group {
-    List<Person> members;
     String name;
+    List<Person> members;
+    List<Goal> goals;
 
-    public Group(List<Person> members, String name) {
-        this.members = members;
+    public Group(String name, List<Person> members, List<Goal> goals) {
         this.name = name;
+        this.members = members;
+        this.goals = goals;
     }
+
+    public Group() {}
 
     public List<Person> getMembers() {
         return members;

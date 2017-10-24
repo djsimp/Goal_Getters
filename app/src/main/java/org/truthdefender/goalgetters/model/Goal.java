@@ -1,5 +1,6 @@
 package org.truthdefender.goalgetters.model;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -12,12 +13,12 @@ public class Goal {
     private String units;
     private int goal;
     private int progress;
-    private Date deadline;
-    private Date startdate;
-    private List<Person> group;
+    private Calendar deadline;
+    private Calendar startdate;
+    private Group group;
     private List<Progress> progress_log;
 
-    public Goal(String title, String units, int goal, int progress, Date deadline, Date startdate, List<Person> group) {
+    public Goal(String title, String units, int goal, int progress, Calendar deadline, Calendar startdate, Group group) {
         this.title = title;
         this.units = units;
         this.goal = goal;
@@ -26,6 +27,8 @@ public class Goal {
         this.startdate = startdate;
         this.group = group;
     }
+
+    public Goal() {}
 
     public String getTitle() {
         return title;
@@ -59,27 +62,31 @@ public class Goal {
         this.progress = progress;
     }
 
-    public Date getDeadline() {
+    public Calendar getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(Calendar deadline) {
         this.deadline = deadline;
     }
 
-    public Date getStartdate() {
+    public Calendar getStartdate() {
         return startdate;
     }
 
-    public void setStartdate(Date startdate) {
+    public void setStartdate(Calendar startdate) {
         this.startdate = startdate;
     }
 
-    public List<Person> getGroup() {
+    public long getTotalTime() { return deadline.getTimeInMillis() - startdate.getTimeInMillis(); }
+
+    public long getTimeTaken() { return Calendar.getInstance().getTimeInMillis() - startdate.getTimeInMillis(); }
+
+    public Group getGroup() {
         return group;
     }
 
-    public void setGroup(List<Person> group) {
+    public void setGroup(Group group) {
         this.group = group;
     }
 

@@ -3,6 +3,7 @@ package org.truthdefender.goalgetters.main;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,15 +18,19 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Singleton;
+import org.truthdefender.goalgetters.model.User;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class CreateAccountActivity extends AppCompatActivity {
     private static final String TAG = "CreateAccountActivity";
+    private boolean joinSuccess;
 
     @InjectView(R.id.input_name) EditText _nameText;
     @InjectView(R.id.input_email) EditText _emailText;
@@ -39,6 +44,8 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
         ButterKnife.inject(this);
+
+        joinSuccess = false;
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,11 +63,15 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
 
+        _emailText.setText(Singleton.get().getUser().getEmail());
+
+        _imageButton.setImageResource(Singleton.get().getUser().getProfileImageTag());
         _imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CreateAccountActivity.this, SelectIconActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -98,6 +109,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
+
         Singleton.get().getmAuth().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -108,10 +120,9 @@ public class CreateAccountActivity extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Toast.makeText(CreateAccountActivity.this, R.string.auth_failed,
-                                    Toast.LENGTH_SHORT).show();
+                            joinSuccess = false;
                         }
-
+                        joinSuccess = true;
                         // ...
                     }
                 });
@@ -121,8 +132,11 @@ public class CreateAccountActivity extends AppCompatActivity {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
                         // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
+                        if(joinSuccess) {
+                            onSignupSuccess();
+                        } else {
+                            onSignupFailed();
+                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -131,6 +145,12 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
+        Singleton.get().setUser(new User(_nameText.getText().toString(), _emailText.getText().toString(),
+                Singleton.get().getUser().getProfileImageTag()));
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+        String userId = myRef.push().getKey();
+        myRef.child(userId).setValue(Singleton.get().getUser());
         Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

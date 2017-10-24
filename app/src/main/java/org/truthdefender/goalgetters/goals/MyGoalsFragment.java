@@ -15,11 +15,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Goal;
+import org.truthdefender.goalgetters.model.Group;
 import org.truthdefender.goalgetters.model.Person;
+import org.truthdefender.goalgetters.model.Singleton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -57,25 +62,10 @@ public class MyGoalsFragment extends Fragment {
         return v;
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
-
-    private List<Goal> generateGoals() {
-        List<Goal> goals = new ArrayList<>();
-        for(int i = 0; i < 10; i++) {
-            goals.add(new Goal("This is a Great Goal", "$", 5000, 2500, new Date(), new Date(), new ArrayList<Person>()));
-        }
-        return goals;
-    }
-
     //Recycler view copy
 
     private void updateUI() {
-        //List<Goal> goals = goalGroups.getMyGoals();
-        List<Goal> goals = generateGoals();
+        List<Goal> goals = Singleton.get().getGoals();
 
         GoalAdapter mGoalAdapter = new GoalAdapter(goals);
         mGoalsRecyclerView.setAdapter(mGoalAdapter);
@@ -120,6 +110,16 @@ public class MyGoalsFragment extends Fragment {
             mGoal = goal;
             mGoalTitle.setText(goal.getTitle());
             mDaysLeft.setText("21 Days Left");
+            LinearLayout.LayoutParams progParams = new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT,
+                    (float)(goal.getProgress() / goal.getGoal())
+            );
+            mProgressBar.setLayoutParams(progParams);
+            LinearLayout.LayoutParams invProgParams = new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT,
+                    (float)(1 - (goal.getProgress() / goal.getGoal()))
+            );
+            mInvProgressBar.setLayoutParams(invProgParams);
         }
     }
 
@@ -146,6 +146,9 @@ public class MyGoalsFragment extends Fragment {
 
         @Override
         public int getItemCount() {
+            if(mGoals == null) {
+                return 0;
+            }
             return mGoals.size();
         }
     }

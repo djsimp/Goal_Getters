@@ -17,9 +17,11 @@ import android.widget.TextView;
 
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Goal;
+import org.truthdefender.goalgetters.model.Group;
 import org.truthdefender.goalgetters.model.Person;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class GroupGoalsFragment extends Fragment {
     private List<Goal> generateGoals() {
         List<Goal> goals = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
-            goals.add(new Goal("This is a Great Goal", "$", 5000, 2500, new Date(), new Date(), new ArrayList<Person>()));
+            goals.add(new Goal("This is a Great Goal", "$", 5000, 2500, Calendar.getInstance(), Calendar.getInstance(), new Group("hi", null, null)));
         }
         return goals;
     }
@@ -120,6 +122,16 @@ public class GroupGoalsFragment extends Fragment {
             mGoal = goal;
             mGoalTitle.setText(goal.getTitle());
             mDaysLeft.setText("21 Days Left");
+            LinearLayout.LayoutParams progParams = new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT,
+                    (float)(goal.getProgress() / goal.getGoal())
+            );
+            mProgressBar.setLayoutParams(progParams);
+            LinearLayout.LayoutParams invProgParams = new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT,
+                    (float)(1 - (goal.getProgress() / goal.getGoal()))
+            );
+            mInvProgressBar.setLayoutParams(invProgParams);
         }
     }
 
