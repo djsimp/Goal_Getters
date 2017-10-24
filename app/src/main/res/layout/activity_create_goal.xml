@@ -58,26 +58,61 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp">
-        <Button
-            android:id="@+id/start_date_picker"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/pick_start_date"
-            android:onClick="showStartDatePickerDialog" />
-        <Button
-            android:id="@+id/deadline_date_picker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="@string/pick_deadline"
-            android:onClick="showDeadlinePickerDialog" />
+            android:layout_weight="0.5"
+            android:layout_gravity="start">
 
-    </RelativeLayout>
+        <ImageButton
+            android:id="@+id/start_date_picker"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerInside"
+            android:adjustViewBounds="true"
+            android:src="@drawable/calender_button"/>
+        <TextView
+            android:id="@+id/start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:text="10/24/2017"
+            android:layout_toEndOf="@id/start_date_picker"
+            android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_gravity="end">
+        <ImageButton
+            android:id="@+id/deadline_date_picker"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerInside"
+            android:adjustViewBounds="true"
+            android:src="@drawable/calender_button"/>
+        <TextView
+            android:id="@+id/deadline_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:text="10/24/2017"
+            android:layout_toEndOf="@id/deadline_date_picker"
+            android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 
     <RelativeLayout

@@ -7,12 +7,16 @@ import android.app.FragmentManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import org.truthdefender.goalgetters.R;
 
@@ -25,8 +29,10 @@ import java.util.Date;
  */
 
 public class CreateGoalActivity extends AppCompatActivity {
-    Button startDateButton;
-    Button deadlineButton;
+    ImageButton startDateButton;
+    TextView startDateText;
+    ImageButton deadlineButton;
+    TextView deadlineText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +47,16 @@ public class CreateGoalActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-        String currentDate = dateFormat.getDateInstance().format(new Date());
-        startDateButton = (Button) findViewById(R.id.start_date_picker);
-        startDateButton.setText(currentDate);
+        String currentDate = dateFormat.format(new Date());
+        startDateButton = (ImageButton) findViewById(R.id.start_date_picker);
+        startDateText = (TextView)findViewById(R.id.start_date);
+        startDateText.setText(currentDate);
+
+        deadlineButton = (ImageButton)findViewById(R.id.deadline_date_picker);
+        deadlineText = (TextView)findViewById(R.id.deadline_date);
+
+
+
         //startDateButton.setText("HI");
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_create_goal);
@@ -67,8 +80,7 @@ public class CreateGoalActivity extends AppCompatActivity {
     }
 
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        deadlineButton = (Button) findViewById(R.id.deadline_date_picker);
-        deadlineButton.setText("lol");
+        deadlineText.setText("lol");
     }
 
 

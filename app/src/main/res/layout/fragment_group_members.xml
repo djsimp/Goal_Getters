@@ -26,8 +26,8 @@ android:layout_height="match_parent">
             android:src="@drawable/plus_green"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
 
     </RelativeLayout>
 
