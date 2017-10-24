@@ -7,7 +7,7 @@
         android:id="@+id/toolbar_report_progress"
         android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         android:theme="@style/ToolBarStyle"
         android:elevation="4dp"/>
 

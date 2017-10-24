@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Global colors -->
-    <color name="colorPrimary">#2600FF</color>
+    <color name="colorPrimary">#749CFF</color>
     <color name="colorPrimaryDark">#1A00B2</color>
     <color name="colorAccent">#FFDF00</color>
     <color name="textColorWhite">#FFF</color>

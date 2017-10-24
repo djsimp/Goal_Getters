@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MyGoalsFragment extends Fragment {
+public class GroupGoalsFragment extends Fragment {
 
     private RecyclerView mGoalsRecyclerView;
     private FloatingActionButton createGoalButton;

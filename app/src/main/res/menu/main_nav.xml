@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimaryDark">
 
     <item
         android:id="@+id/navigation_goals"
@@ -12,9 +12,9 @@
         android:icon="@drawable/group_icon"
         android:title="@string/title_groups" />
 
-    <item
-        android:id="@+id/navigation_past_goals"
-        android:icon="@drawable/past_goals_icon"
-        android:title="@string/title_past_goals" />
+    <!--<item-->
+        <!--android:id="@+id/navigation_past_goals"-->
+        <!--android:icon="@drawable/past_goals_icon"-->
+        <!--android:title="@string/title_past_goals" />-->
 
 </menu>

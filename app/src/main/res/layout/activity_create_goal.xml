@@ -7,7 +7,7 @@
         android:id="@+id/toolbar_create_goal"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         android:theme="@style/ToolBarStyle"
         android:elevation="4dp"/>
 

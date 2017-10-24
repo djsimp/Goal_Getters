@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Group;
 import org.truthdefender.goalgetters.model.Person;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,39 +84,27 @@ public class MyGroupsFragment extends Fragment {
 
     private class GroupHolder extends RecyclerView.ViewHolder {
 
-        private LinearLayout mListItemGroup;
-        private TextView mGroupTitle;
-        private View mGroupTotalBar;
-        private View mProgressBar;
-        private View mInvProgressBar;
-        private View mToDateBar;
-        private View mInvToDateBar;
-        private RelativeLayout mLeftOfDaysLeft;
-        private TextView mDaysLeft;
-        private RelativeLayout mRightOfDaysLeft;
+        private CardView mGroupCard;
+        private TextView mGroupName;
+        private TextView mGroupMemberList;
 
         private Group mGroup;
 
         private GroupHolder(View itemView) {
             super(itemView);
 
-//            mListItemGroup = (LinearLayout)itemView.findViewById(R.id.list_item_group);
-//            mListItemGroup.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-////                    PeopleEvents.get().setCurrentEvent(mEvent);
-//                    Intent intent = new Intent(getActivity(), GroupActivity.class);
-//                    startActivity(intent);
-//                }
-//            });
-//            mGroupTitle = (TextView)itemView.findViewById(R.id.group_title);
-//            mProgressBar = itemView.findViewById(R.id.progress_bar);
-//            mInvProgressBar = itemView.findViewById(R.id.inv_progress_bar);
-//            mToDateBar = itemView.findViewById(R.id.to_date_bar);
-//            mInvToDateBar = itemView.findViewById(R.id.inv_to_date_bar);
-//            mLeftOfDaysLeft = (RelativeLayout)itemView.findViewById(R.id.left_of_days_left);
-//            mDaysLeft = (TextView)itemView.findViewById(R.id.days_left);
-//            mRightOfDaysLeft = (RelativeLayout)itemView.findViewById(R.id.right_of_days_left);
+            mGroupCard = (CardView) itemView.findViewById(R.id.group_card);
+            mGroupCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    PeopleEvents.get().setCurrentEvent(mEvent);
+                    Intent intent = new Intent(getActivity(), GroupActivity.class);
+                    startActivity(intent);
+                }
+            });
+            mGroupName = (TextView)itemView.findViewById(R.id.group_name);
+
+            mGroupMemberList = (TextView)itemView.findViewById(R.id.group_member_list);
         }
 
         private void bindGroup(Group group) {
@@ -135,7 +125,7 @@ public class MyGroupsFragment extends Fragment {
         @Override
         public GroupHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.layout_group, parent, false);
+            View view = layoutInflater.inflate(R.layout.layout_group_card, parent, false);
             return new MyGroupsFragment.GroupHolder(view);
         }
 

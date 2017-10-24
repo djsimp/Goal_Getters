@@ -2,13 +2,14 @@ package org.truthdefender.goalgetters.goals;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.Button;
 import android.widget.DatePicker;
 
 import org.truthdefender.goalgetters.R;
+
+import java.util.Calendar;
 
 /**
  * Created by Tyler on 10/23/2017.

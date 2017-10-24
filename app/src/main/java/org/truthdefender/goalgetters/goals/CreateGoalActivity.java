@@ -16,6 +16,8 @@ import android.widget.NumberPicker;
 
 import org.truthdefender.goalgetters.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -36,7 +38,10 @@ public class CreateGoalActivity extends AppCompatActivity {
         np.setMaxValue(1000000);
         np.setWrapSelectorWheel(false);
 
-        String currentDate = DateFormat.getDateInstance().format(new Date());
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+        String currentDate = dateFormat.getDateInstance().format(new Date());
         startDateButton = (Button) findViewById(R.id.start_date_picker);
         startDateButton.setText(currentDate);
         //startDateButton.setText("HI");
