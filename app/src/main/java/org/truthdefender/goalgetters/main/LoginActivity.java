@@ -1,17 +1,16 @@
 package org.truthdefender.goalgetters.main;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import android.content.Intent;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.NumberPicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,75 +19,38 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.sendbird.android.SendBird;
-import com.sendbird.android.SendBirdException;
-import com.sendbird.android.User;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Singleton;
-import org.truthdefender.goalgetters.utils.PreferenceUtils;
+import org.truthdefender.goalgetters.model.User;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class LoginActivity extends AppCompatActivity {
-
     private static final String TAG = "LoginActivity";
-    private TextView mSectionTitle;
-    private CoordinatorLayout mLoginLayout;
-    private TextInputEditText mEmail, mPassword;
-    private Button mSignInButton, mCreateAccountButton;
-    private ContentLoadingProgressBar mProgressBar;
+    private static final int REQUEST_SIGNUP = 0;
+    private String email;
+    private String password;
 
-
+    @InjectView(R.id.section_title_text) TextView _sectionTitle;
+    @InjectView(R.id.input_email) EditText _emailText;
+    @InjectView(R.id.input_password) EditText _passwordText;
+    @InjectView(R.id.button_login) Button _loginButton;
+    @InjectView(R.id.link_signup) TextView _signupLink;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_login);
+        ButterKnife.inject(this);
 
-        mLoginLayout = (CoordinatorLayout) findViewById(R.id.layout_login);
-
-        mSectionTitle = (TextView)findViewById(R.id.section_title_text);
-        mSectionTitle.setText(getResources().getText(R.string.app_name).toString().toUpperCase());
-        mSectionTitle.setTextColor(getResources().getColor(R.color.colorPrimary));
-        mSectionTitle.setTextSize(80);
-        mSectionTitle.setHeight(200);
-
-        mEmail = (TextInputEditText) findViewById(R.id.edittext_login_username);
-        mPassword = (TextInputEditText) findViewById(R.id.edittext_login_password);
-
-        mEmail.setText(PreferenceUtils.getUsername(this));
-        mPassword.setText(PreferenceUtils.getPassword(this));
-
-        mSignInButton = (Button) findViewById(R.id.button_sign_in);
-        mSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = mEmail.getText().toString();
-                // Remove all spaces from userID
-                username = username.replaceAll("\\s", "");
-
-                String password = mPassword.getText().toString();
-
-                PreferenceUtils.setUsername(LoginActivity.this, username);
-                PreferenceUtils.setPassword(LoginActivity.this, password);
-
-                signIn(mEmail.getText().toString(), mPassword.getText().toString());
-               // connectToGoalGetters(username, password);
-
-            }
-        });
-
-        mCreateAccountButton = (Button) findViewById(R.id.button_create_account);
-        mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        // A loading indicator
-        mProgressBar = (ContentLoadingProgressBar) findViewById(R.id.progress_bar_login);
+        _sectionTitle.setText("GOAL GETTERS");
+        _sectionTitle.setTextSize(70);
+        _sectionTitle.setHeight(200);
+        _sectionTitle.setGravity(Gravity.CENTER);
 
         Singleton.get().setmAuth(FirebaseAuth.getInstance());
 
@@ -104,6 +66,23 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
                 // ...
+            }
+        });
+
+        _loginButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                login();
+            }
+        });
+
+        _signupLink.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -122,133 +101,103 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Attempts to connect a user to GoalGetters.
-     * @param username    The unique username of the user, which will be displayed throughout app.
-     * @param password  The user's password, which will be displayed in chats.
-     */
-    private void connectToGoalGetters(final String username, final String password) {
-        // Show the loading indicator
-        showProgressBar(true);
-        mSignInButton.setEnabled(false);
+    public void login() {
+        Log.d(TAG, "Login");
 
-        SendBird.connect(username, new SendBird.ConnectHandler() {
-            @Override
-            public void onConnected(User user, SendBirdException e) {
-                // Callback received; hide the progress bar.
-                showProgressBar(false);
+        if (!validate()) {
+            onLoginFailed();
+            return;
+        }
 
-                if (e != null) {
-                    // Error!
-                    Toast.makeText(
-                            LoginActivity.this, "" + e.getCode() + ": " + e.getMessage(),
-                            Toast.LENGTH_SHORT)
-                            .show();
+        _loginButton.setEnabled(false);
 
-                    // Show login failure snackbar
-                    showSnackbar("Login to GoalGetters failed");
-                    mSignInButton.setEnabled(true);
-                    PreferenceUtils.setConnected(LoginActivity.this, false);
-                    return;
-                }
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+                R.style.AppTheme_PopupOverlay);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
 
-                PreferenceUtils.setConnected(LoginActivity.this, true);
-
-                // Update the user's nickname
-//                updateCurrentUserInfo(userNickname);
-//                updateCurrentUserPushToken();
-
-                // Proceed to MainActivity
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-    }
-
-    private void signIn(String email, String password) {
-        Log.d(TAG, "signIn:" + email);
+        email = _emailText.getText().toString();
+        password = _passwordText.getText().toString();
 
         Singleton.get().getmAuth().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = Singleton.get().getmAuth().getCurrentUser();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                        Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithEmail:failed", task.getException());
+                            Toast.makeText(LoginActivity.this, R.string.auth_failed,
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
+                        } else {
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            if (user != null) {
+                                String uid = user.getUid();
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference myRef = database.getReference("users/" + uid);
+                                //Singleton.get().setUser(myRef.getValue(User.class));
+                            }
                         }
+
+                        // ...
                     }
                 });
-        // [END sign_in_with_email]
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        // On complete call either onLoginSuccess or onLoginFailed
+                        onLoginSuccess();
+                        // onLoginFailed();
+                        progressDialog.dismiss();
+                    }
+                }, 3000);
     }
 
-    /**
-     * Update the user's push token.
-     */
-//    private void updateCurrentUserPushToken() {
-//        // Register Firebase Token
-//        SendBird.registerPushTokenForCurrentUser(FirebaseInstanceId.getInstance().getToken(),
-//                new SendBird.RegisterPushTokenWithStatusHandler() {
-//                    @Override
-//                    public void onRegistered(SendBird.PushTokenRegistrationStatus pushTokenRegistrationStatus, SendBirdException e) {
-//                        if (e != null) {
-//                            // Error!
-//                            Toast.makeText(LoginActivity.this, "" + e.getCode() + ":" + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
-//
-//                        Toast.makeText(LoginActivity.this, "Push token registered.", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
-
-    /**
-     * Updates the user's nickname.
-     */
-//    private void updateCurrentUserInfo(String userNickname) {
-//        SendBird.updateCurrentUserInfo(userNickname, null, new SendBird.UserInfoUpdateHandler() {
-//            @Override
-//            public void onUpdated(SendBirdException e) {
-//                if (e != null) {
-//                    // Error!
-//                    Toast.makeText(
-//                            LoginActivity.this, "" + e.getCode() + ":" + e.getMessage(),
-//                            Toast.LENGTH_SHORT)
-//                            .show();
-//
-//                    // Show update failed snackbar
-//                    showSnackbar("Update user nickname failed");
-//
-//                    return;
-//                }
-//
-//            }
-//        });
-//    }
-
-    // Displays a Snackbar from the bottom of the screen
-    private void showSnackbar(String text) {
-        Snackbar snackbar = Snackbar.make(mLoginLayout, text, Snackbar.LENGTH_SHORT);
-
-        snackbar.show();
+    @Override
+    public void onBackPressed() {
+        // disable going back to the MainActivity
+        moveTaskToBack(true);
     }
 
-    // Shows or hides the ProgressBar
-    private void showProgressBar(boolean show) {
-        if (show) {
-            mProgressBar.show();
+    public void onLoginSuccess() {
+        _loginButton.setEnabled(true);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+        finish();
+    }
+
+    public void onLoginFailed() {
+        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+
+        _loginButton.setEnabled(true);
+    }
+
+    public boolean validate() {
+        boolean valid = true;
+
+        String email = _emailText.getText().toString();
+        String password = _passwordText.getText().toString();
+
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            _emailText.setError("enter a valid email address");
+            valid = false;
         } else {
-            mProgressBar.hide();
+            _emailText.setError(null);
         }
+
+        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else {
+            _passwordText.setError(null);
+        }
+
+        return valid;
     }
 }

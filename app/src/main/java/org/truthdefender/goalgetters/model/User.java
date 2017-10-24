@@ -6,7 +6,7 @@ package org.truthdefender.goalgetters.model;
 
 public class User {
 
-    private String username;
+    private String name;
     private String email;
     private String password;
     private String profileImageTag;
@@ -15,19 +15,19 @@ public class User {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String username, String email, String password, String profileImageTag) {
-        this.username = username;
+    public User(String name, String email, String password, String profileImageTag) {
+        this.name = name;
         this.email = email;
         this.password = password;
         this.profileImageTag = profileImageTag;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
