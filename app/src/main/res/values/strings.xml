@@ -105,6 +105,10 @@
     <string name="title_activity_select_icon">SelectIconActivity</string>
     <string name="title_activity_create_group">CreateGroupActivity</string>
     <string name="title_activity_groups">GroupsActivity</string>
+    <string name="goal_action">Action</string>
+    <string name="start_date">Start Date</string>
+    <string name="pick_start_date">Choose Start Date</string>
+    <string name="pick_deadline">Choose Deadline</string>
 
 
 </resources>
