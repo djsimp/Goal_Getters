@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_SIGNUP = 0;
     private String email;
     private String password;
+    private boolean loginSuccess;
 
     @InjectView(R.id.section_title_text) TextView _sectionTitle;
     @InjectView(R.id.input_email) EditText _emailText;
@@ -111,6 +112,8 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        loginSuccess = false;
+
         _loginButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
@@ -135,15 +138,12 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithEmail:failed", task.getException());
                             Toast.makeText(LoginActivity.this, R.string.auth_failed,
                                     Toast.LENGTH_SHORT).show();
+                            loginSuccess = false;
                         } else {
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             if (user != null) {
-                                String uid = user.getUid();
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference myRef = database.getReference("users/" + uid);
-
-
-                                //Singleton.get().setUser(myRef.getValue(User.class));
+                                Singleton.get().setUserId(user.getUid());
+                                loginSuccess = true;
                             }
                         }
 
@@ -155,8 +155,11 @@ public class LoginActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
+                        if(loginSuccess) {
+                            onLoginSuccess();
+                        } else {
+                            onLoginFailed();
+                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -172,8 +175,6 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
-        finish();
-        finish();
     }
 
     public void onLoginFailed() {

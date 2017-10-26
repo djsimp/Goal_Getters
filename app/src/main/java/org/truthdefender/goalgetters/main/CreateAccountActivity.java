@@ -127,8 +127,9 @@ public class CreateAccountActivity extends AppCompatActivity {
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             joinSuccess = false;
+                        } else {
+                            joinSuccess = true;
                         }
-                        joinSuccess = true;
                         // ...
                     }
                 });
