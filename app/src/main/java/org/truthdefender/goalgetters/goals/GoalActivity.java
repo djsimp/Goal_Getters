@@ -72,50 +72,50 @@ public class GoalActivity extends AppCompatActivity {
         mProgressLogRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         groupGoalCard = (LinearLayout)findViewById(R.id.list_item_goal);
-        groupGoalCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mProgressLogRecyclerView.getVisibility() == View.VISIBLE) {
-                    mProgressLogRecyclerView.setVisibility(View.GONE);
-                } else {
-                    mProgressLogRecyclerView.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+//        groupGoalCard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(mProgressLogRecyclerView.getVisibility() == View.VISIBLE) {
+//                    mProgressLogRecyclerView.setVisibility(View.GONE);
+//                } else {
+//                    mProgressLogRecyclerView.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
 
         updateUI();
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)findViewById(R.id.nav_goal);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                FragmentManager menuFragmentManager = getFragmentManager();
-                switch(item.getItemId()) {
-                    case R.id.nav_my_progress:
-                        groupGoalCard.setClickable(false);
-                        menuFragmentManager.beginTransaction()
-                                .replace(R.id.progress_frame, myProgressFragment)
-                                .addToBackStack(null)
-                                .commit();
-                        break;
-                    case R.id.nav_members:
-                        groupGoalCard.setClickable(true);
-                        menuFragmentManager.beginTransaction()
-                                .replace(R.id.progress_frame, progressFragment)
-                                .addToBackStack(null)
-                                .commit();
-                        break;
-//                    case R.id.nav_chat:
+//        BottomNavigationView bottomNavigationView = (BottomNavigationView)findViewById(R.id.nav_goal);
+//        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                FragmentManager menuFragmentManager = getFragmentManager();
+//                switch(item.getItemId()) {
+//                    case R.id.nav_my_progress:
 //                        groupGoalCard.setClickable(false);
 //                        menuFragmentManager.beginTransaction()
-//                                .replace(R.id.progress_frame, groupChatFragment)
+//                                .replace(R.id.progress_frame, myProgressFragment)
 //                                .addToBackStack(null)
 //                                .commit();
 //                        break;
-                }
-                return true;
-            }
-        });
+////                    case R.id.nav_members:
+////                        groupGoalCard.setClickable(true);
+////                        menuFragmentManager.beginTransaction()
+////                                .replace(R.id.progress_frame, progressFragment)
+////                                .addToBackStack(null)
+////                                .commit();
+////                        break;
+////                    case R.id.nav_chat:
+////                        groupGoalCard.setClickable(false);
+////                        menuFragmentManager.beginTransaction()
+////                                .replace(R.id.progress_frame, groupChatFragment)
+////                                .addToBackStack(null)
+////                                .commit();
+////                        break;
+//                }
+//                return true;
+//            }
+//        });
     }
 
     @Override

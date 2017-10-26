@@ -35,6 +35,7 @@ import org.truthdefender.goalgetters.model.Goal;
 import org.truthdefender.goalgetters.model.Person;
 import org.truthdefender.goalgetters.model.Progress;
 import org.truthdefender.goalgetters.model.Singleton;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,6 +62,45 @@ public class MyProgressFragment extends Fragment {
         mProgressLogRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
+
+
+
+        //Update big goal
+        TextView goalTitle = (TextView) getActivity().findViewById(R.id.goal_title);
+        goalTitle.setText(Singleton.get().getCurrentGoal().getTitle());
+
+        TextView goalStatus = (TextView) getActivity().findViewById(R.id.goal_status);
+        goalStatus.setText(Singleton.get().getCurrentGoal().getStatus());
+
+        TextView timeLeft = (TextView) getActivity().findViewById(R.id.days_left);
+        timeLeft.setText(Singleton.get().getCurrentGoal().getDaysLeft());
+        View mProgressBar = getActivity().findViewById(R.id.progress_bar);
+        View mInvProgressBar = getActivity().findViewById(R.id.inv_progress_bar);
+        View mToDateBar = getActivity().findViewById(R.id.to_date_bar);
+        View mInvToDateBar = getActivity().findViewById(R.id.inv_to_date_bar);
+
+        LinearLayout.LayoutParams progParams = new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT,
+                Singleton.get().getCurrentGoal().getPercentComplete()
+        );
+        mProgressBar.setLayoutParams(progParams);
+        LinearLayout.LayoutParams invProgParams = new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT,
+                Singleton.get().getCurrentGoal().getPercentLeft()
+        );
+        mInvProgressBar.setLayoutParams(invProgParams);
+        LinearLayout.LayoutParams timeParams = new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT,
+                Singleton.get().getCurrentGoal().getPercentTimeTaken()
+        );
+        mToDateBar.setLayoutParams(timeParams);
+        LinearLayout.LayoutParams invTimeParams = new LinearLayout.LayoutParams(
+                0, ViewGroup.LayoutParams.MATCH_PARENT,
+                Singleton.get().getCurrentGoal().getPercentTimeLeft()
+        );
+        mInvToDateBar.setLayoutParams(invTimeParams);
+
+
         //Update Person Information
         reportProgressButton = (Button)v.findViewById(R.id.report_progress_button);
         reportProgressButton.setOnClickListener(new View.OnClickListener() {
@@ -70,15 +110,7 @@ public class MyProgressFragment extends Fragment {
             }
         });
 
-        TextView personName = (TextView) v.findViewById(R.id.person_name);
-        personName.setText(Singleton.get().getUser().getName());
 
-        TextView goalText = (TextView) v.findViewById(R.id.goalText);
-        goalText.setText(Singleton.get().getCurrentGoal().getTitle());
-
-
-
-        ImageView profile = (ImageView) v.findViewById(R.id.profile_picture);
         //profile.setBackground();
         //Finish updating person information
 

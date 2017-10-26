@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/member_progress_card"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true">
 
@@ -40,27 +40,55 @@
             android:text="PLACE HOLDER GOal but what if it's really long i guess i found the right way to do it :)."/>
 
         <View
-            android:id="@+id/progress_bar"
+            android:id="@+id/person_progress_bar"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_below="@+id/goalText"
             android:background="@drawable/progress_bar_base"/>
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_below="@id/person_name">
 
-        <View
-            android:id="@+id/goalProgress"
-            android:layout_width="240dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/goalText"
-            android:background="@drawable/progress_bar_goal"
-            />
-        <View
-            android:id="@+id/timeLeft"
-            android:layout_width="160dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/goalText"
-            android:background="@drawable/progress_bar_time_left"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@drawable/progress_bar_goal" />
+
+            <View
+                android:id="@+id/inv_person_progress_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_below="@id/person_name">
+
+            <View
+                android:id="@+id/person_to_date_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:background="@drawable/progress_bar_time_left"
+                android:elevation="1dp" />
+
+            <View
+                android:id="@+id/inv_person_to_date_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3" />
+
+
+
+        </LinearLayout>
+
 
 
     </RelativeLayout>
