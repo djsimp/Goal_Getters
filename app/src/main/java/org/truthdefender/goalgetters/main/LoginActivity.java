@@ -19,12 +19,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.truthdefender.goalgetters.R;
+import org.truthdefender.goalgetters.model.Goal;
 import org.truthdefender.goalgetters.model.Singleton;
 import org.truthdefender.goalgetters.model.User;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -142,6 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             if (user != null) {
+                                initializeUser(user.getUid());
                                 Singleton.get().setUserId(user.getUid());
                                 onLoginSuccess();
                             } else {
@@ -165,6 +172,21 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         // disable going back to the MainActivity
         moveTaskToBack(true);
+    }
+
+    public void initializeUser(String userId) {
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/" + userId);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Singleton.get().setUser(dataSnapshot.getValue(User.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void onLoginSuccess() {

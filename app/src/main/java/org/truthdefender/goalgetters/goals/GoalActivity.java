@@ -105,13 +105,13 @@ public class GoalActivity extends AppCompatActivity {
                                 .addToBackStack(null)
                                 .commit();
                         break;
-                    case R.id.nav_chat:
-                        groupGoalCard.setClickable(false);
-                        menuFragmentManager.beginTransaction()
-                                .replace(R.id.progress_frame, groupChatFragment)
-                                .addToBackStack(null)
-                                .commit();
-                        break;
+//                    case R.id.nav_chat:
+//                        groupGoalCard.setClickable(false);
+//                        menuFragmentManager.beginTransaction()
+//                                .replace(R.id.progress_frame, groupChatFragment)
+//                                .addToBackStack(null)
+//                                .commit();
+//                        break;
                 }
                 return true;
             }

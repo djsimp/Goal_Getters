@@ -156,6 +156,7 @@ public class MyGoalsFragment extends Fragment {
     private void updateUI() {
         GoalAdapter mGoalAdapter = new GoalAdapter(myGoals);
         mGoalsRecyclerView.setAdapter(mGoalAdapter);
+        mGoalsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     private class GoalHolder extends RecyclerView.ViewHolder {
@@ -185,6 +186,7 @@ public class MyGoalsFragment extends Fragment {
                 }
             });
             mGoalCard = (CardView)itemView.findViewById(R.id.goal_card);
+            mGoalCard.bringToFront();
             mGoalTitle = (TextView)itemView.findViewById(R.id.goal_title);
             mProgressBar = itemView.findViewById(R.id.progress_bar);
             mInvProgressBar = itemView.findViewById(R.id.inv_progress_bar);

@@ -237,8 +237,11 @@ public class CreateGoalActivity extends AppCompatActivity {
                         groupName.setText(goalGroup.getName());
                         groupMemberList.setText(goalGroup.getMemberList());
                         Singleton.get().setCurrentGroup(goalGroup);
+
                     }
                 }
+
+
             }
 
             @Override
@@ -247,13 +250,15 @@ public class CreateGoalActivity extends AppCompatActivity {
             }
         });
     }
-
+    int selected;
+    String[] items;
     public void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateGoalActivity.this);
         builder.setTitle(R.string.select_group_dialog_title);
 
+
         //list of items
-        String[] items = new String[groupNames.size()];
+        items = new String[groupNames.size()];
         for(int i = 0; i < groupNames.size(); i++) {
             items[i] = groupNames.get(i);
         }
@@ -262,6 +267,7 @@ public class CreateGoalActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // item selected logic
+                        selected = which;
                     }
                 });
 
@@ -271,6 +277,9 @@ public class CreateGoalActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // positive button logic
+                        String groupName = items[selected];
+                        Singleton.get().setCurrentGroupName(groupName);
+                        initializeGroupCard();
                     }
                 });
 
