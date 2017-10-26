@@ -201,11 +201,6 @@ public class MyGoalsFragment extends Fragment {
             mGoalTitle.setText(goal.getTitle());
             String status = goal.getStatus();
             mGoalStatus.setText(status);
-            if(status.substring(status.length()-5).equals("ahead")) {
-                mListItemGoal.setBackgroundColor(getResources().getColor(R.color.positive_color));
-            } else if(status.substring(status.length()-5).equals("behind")) {
-                mListItemGoal.setBackgroundColor(getResources().getColor(R.color.negative_color));
-            }
             mDaysLeft.setText(goal.getDaysLeft());
             LinearLayout.LayoutParams progParams = new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT,

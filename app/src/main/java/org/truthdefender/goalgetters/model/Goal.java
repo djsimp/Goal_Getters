@@ -14,17 +14,17 @@ import java.util.concurrent.TimeUnit;
 public class Goal {
     private String title;
     private String units;
-    private int goal;
-    private int progress;
-//    private int startYear, startMonth, startDate, startHour, startMinute, startSecond;
-//    private int endYear, endMonth, endDate, endHour, endMinute, endSecond;
+    private float goal;
+    private float progress;
+//    private float startYear, startMonth, startDate, startHour, startMinute, startSecond;
+//    private float endYear, endMonth, endDate, endHour, endMinute, endSecond;
     private Date deadline;
     private Date startdate;
     private String group;
     private List<Progress> progress_log;
     private String goalId;
 
-    public Goal(String title, String units, int goal, int progress, Date deadline, Date startdate, String group) {
+    public Goal(String title, String units, float goal, float progress, Date deadline, Date startdate, String group) {
         this.title = title;
         this.units = units;
         this.goal = goal;
@@ -47,7 +47,7 @@ public class Goal {
         this.progress_log = new ArrayList<>();
     }
 
-    public Goal(String title, String units, int goal, int progress, Date deadline, Date startdate) {
+    public Goal(String title, String units, float goal, float progress, Date deadline, Date startdate) {
         this.title = title;
         this.units = units;
         this.goal = goal;
@@ -87,19 +87,19 @@ public class Goal {
         this.units = units;
     }
 
-    public int getGoal() {
+    public float getGoal() {
         return goal;
     }
 
-    public void setGoal(int goal) {
+    public void setGoal(float goal) {
         this.goal = goal;
     }
 
-    public int getProgress() {
+    public float getProgress() {
         return progress;
     }
 
-    public void setProgress(int progress) {
+    public void setProgress(float progress) {
         this.progress = progress;
     }
 
@@ -149,32 +149,32 @@ public class Goal {
         this.startdate = startdate;
     }
 
-    public long getTotalTime() {
+    public float getTotalTime() {
         Calendar start = Calendar.getInstance();
         start.setTime(startdate);
         Calendar end = Calendar.getInstance();
         end.setTime(deadline);
-        return end.getTimeInMillis() - start.getTimeInMillis();
+        return (float)(end.getTimeInMillis() - start.getTimeInMillis());
     }
 
-    public long getTimeTaken() {
+    public float getTimeTaken() {
         Calendar start = Calendar.getInstance();
         start.setTime(startdate);
-        return Calendar.getInstance().getTimeInMillis() - start.getTimeInMillis();
+        return (float)(Calendar.getInstance().getTimeInMillis() - start.getTimeInMillis());
     }
 
-    public long getTimeLeft() {
+    public float getTimeLeft() {
         Calendar end = Calendar.getInstance();
         end.setTime(deadline);
-        return end.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
+        return (float)(end.getTimeInMillis() - Calendar.getInstance().getTimeInMillis());
     }
 
-    public float getPercentTimeTaken() { return (float)(getTimeTaken() / getTotalTime()); }
+    public float getPercentTimeTaken() { return (getTimeTaken() / getTotalTime()); }
 
-    public float getPercentTimeLeft() { return (float)(1 - getTimeTaken() / getTotalTime()); }
+    public float getPercentTimeLeft() { return (1 - getTimeTaken() / getTotalTime()); }
 
     public String getStatus() {
-        int ontime = Math.round(getPercentTimeTaken() * goal);
+        float ontime = Math.round(getPercentTimeTaken() * goal);
         StringBuilder sb = new StringBuilder();
         String curUnits = units;
         if(Math.abs(ontime - progress) == 1 && units.charAt(units.length()-1) == 's') {
@@ -191,7 +191,7 @@ public class Goal {
     }
 
     public String getDaysLeft() {
-        double daysleft = TimeUnit.DAYS.convert(getTimeLeft(), TimeUnit.MILLISECONDS);
+        double daysleft = TimeUnit.DAYS.convert((long)getTimeLeft(), TimeUnit.MILLISECONDS);
         StringBuilder sb = new StringBuilder();
         if(daysleft > 1) {
             Double myDouble = Double.valueOf(daysleft);
@@ -203,7 +203,7 @@ public class Goal {
                 sb.append(" days left");
             }
         } else {
-            daysleft = TimeUnit.HOURS.convert(getTimeLeft(), TimeUnit.MILLISECONDS);
+            daysleft = TimeUnit.HOURS.convert((long)getTimeLeft(), TimeUnit.MILLISECONDS);
             Double myDouble = Double.valueOf(daysleft);
             Integer hours = Integer.valueOf(myDouble.intValue());
             sb.append(hours);
@@ -225,14 +225,23 @@ public class Goal {
     }
 
     public List<Progress> getProgressLog() {
+        if(progress_log == null) {
+            progress_log = new ArrayList<Progress>();
+        }
         return progress_log;
     }
 
     public void setProgressLog(List<Progress> progress_log) {
+        if(this.progress_log == null) {
+            this.progress_log = new ArrayList<>();
+        }
         this.progress_log = progress_log;
     }
 
     public void addProgressToLog(Progress progress) {
+        if(this.progress_log == null) {
+            this.progress_log = new ArrayList<>();
+        }
         this.progress_log.add(progress);
     }
 

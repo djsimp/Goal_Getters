@@ -23,6 +23,7 @@ import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.groupchannel.GroupChatFragment;
 import org.truthdefender.goalgetters.main.MainActivity;
 import org.truthdefender.goalgetters.model.Progress;
+import org.truthdefender.goalgetters.model.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,22 +130,10 @@ public class GoalActivity extends AppCompatActivity {
     }
 
 
-    private List<Progress> generateProgress() {
-        List<Progress> log = new ArrayList<>();
-        for(int i = 0; i < 15; i++) {
-            if(i%2 == 0) {
-                log.add(new Progress("October 20, 2017", "+$150 - I am making some great progress!"));
-            } else {
-                log.add(new Progress("October 20, 2017", "-$100 - Another one bites the dust!"));
-            }
-        }
-        return log;
-    }
-
     //Recycler view copy
 
     private void updateUI() {
-        List<Progress> log = generateProgress();
+        List<Progress> log = Singleton.get().getCurrentGoal().getProgressLog();
 
         ProgressAdapter mProgressAdapter = new ProgressAdapter(log);
         mProgressLogRecyclerView.setAdapter(mProgressAdapter);
