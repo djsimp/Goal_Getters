@@ -1,11 +1,8 @@
 package org.truthdefender.goalgetters.goals;
 
 import android.os.Bundle;
-import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.NumberPicker;
 
 import org.truthdefender.goalgetters.R;
@@ -19,7 +16,7 @@ public class ReportProgressActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report_progress);
+        setContentView(R.layout.report_progress_layout);
         NumberPicker np =(NumberPicker) findViewById(R.id.number_picker);
 
         np.setMinValue(0);

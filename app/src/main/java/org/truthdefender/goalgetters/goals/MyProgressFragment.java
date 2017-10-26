@@ -1,10 +1,13 @@
 package org.truthdefender.goalgetters.goals;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,10 +51,10 @@ public class MyProgressFragment extends Fragment {
 
         reportProgressButton = (Button)v.findViewById(R.id.report_progress_button);
         reportProgressButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ReportProgressActivity.class);
-                startActivity(intent);
+                show();
             }
         });
 
@@ -136,5 +141,46 @@ public class MyProgressFragment extends Fragment {
                 mProgressItemText.setTextColor(getResources().getColor(R.color.negative_color));
             }
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void show() {
+        final Dialog reportDialog = new Dialog(this.getContext());
+        reportDialog.setTitle("Set Amount");
+        reportDialog.setContentView(R.layout.report_progress_layout);
+        Button setBtn = (Button) reportDialog.findViewById(R.id.setBtn);
+        Button cnlBtn = (Button) reportDialog.findViewById(R.id.CancelButton_NumberPicker);
+
+        final EditText description = (EditText) reportDialog.findViewById(R.id.report_description);
+
+        final NumberPicker numberPicker = (NumberPicker) reportDialog.findViewById(R.id.number_picker);
+        numberPicker.setMaxValue(1000000);
+        numberPicker.setMinValue(0);
+        numberPicker.setWrapSelectorWheel(false);
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                // TODO Auto-generated method stub
+            }
+        });
+        setBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //We're going to have to make some kind of call to the server here................
+                String number = String.valueOf(numberPicker.getValue());
+                String report = description.getText().toString();
+
+                reportDialog.dismiss();
+            }
+        });
+
+        cnlBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reportDialog.dismiss();
+            }
+        });
+
+        reportDialog.show();
     }
 }
