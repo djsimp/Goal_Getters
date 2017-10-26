@@ -158,20 +158,20 @@ public class CreateAccountActivity extends AppCompatActivity {
         String groupKey = myRef.getParent().child("groups").push().getKey();
         myRef.getParent().child("groups").child(groupKey).child("name").setValue("Just Me");
         myRef.getParent().child("groups").child(groupKey).child("members").child(userId).setValue(Singleton.get().getUser().getName());
-        myRef.child(userId).child("groups").child(groupKey).setValue(true);
+        myRef.child(userId).child("groups").child(groupKey).setValue("Just Me");
 
         GregorianCalendar today = (GregorianCalendar)Calendar.getInstance();
         int dayOfMonth = today.get(Calendar.DAY_OF_MONTH);
         GregorianCalendar tomorrow = (GregorianCalendar)Calendar.getInstance();
         tomorrow.set(Calendar.DAY_OF_MONTH, dayOfMonth + 1);
-        Goal firstGoal = new Goal("Create 1 goal", "goals", 1, 0, tomorrow.getTime(), today.getTime());
+        Goal firstGoal = new Goal("Create 1 Goal", "goals", 1, 0, tomorrow.getTime(), today.getTime());
 
         String goalKey = myRef.getParent().child("goals").push().getKey();
         myRef.getParent().child("goals").child(goalKey).setValue(firstGoal);
         myRef.getParent().child("goals").child(goalKey).child("group").setValue(groupKey);
-        myRef.child(userId).child("goals").child(goalKey).setValue(true);
+        myRef.child(userId).child("goals").child(goalKey).setValue("Create 1 Goal");
 
-        myRef.getParent().child("groups").child(groupKey).child("goals").child(goalKey).setValue(true);
+        myRef.getParent().child("groups").child(groupKey).child("goals").child(goalKey).setValue("Create 1 Goal");
 
         Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
         startActivity(intent);

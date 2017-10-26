@@ -86,13 +86,14 @@ public class CreateGroupActivity extends AppCompatActivity {
         mCreateGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 HashMap<String, String> finalMemberList = new HashMap<String, String>();
+                finalMemberList.put(user.getUid(), Singleton.get().getUser().getName());
                 for(User member : memberList) {
                     finalMemberList.put(member.getUuid(), member.getName());
                 }
-                Group group = new Group(mGroupName.getText().toString(), finalMemberList, null);
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                Group group = new Group(mGroupName.getText().toString(), finalMemberList, null);
 
                 final FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference().child("groups");
@@ -111,9 +112,9 @@ public class CreateGroupActivity extends AppCompatActivity {
                 String key = myRef.push().getKey();
                 myRef.child(key).setValue(group);
                 DatabaseReference ref = myRef.getParent().child("users");
-                ref.child(user.getUid()).child("groups").child(key).setValue(true);
+                ref.child(user.getUid()).child("groups").child(key).setValue(group.getName());
                 for(User member : memberList) {
-                    ref.child(member.getUuid()).child("groups").child(key).setValue(true);
+                    ref.child(member.getUuid()).child("groups").child(key).setValue(group.getName());
                 }
                 finish();
             }

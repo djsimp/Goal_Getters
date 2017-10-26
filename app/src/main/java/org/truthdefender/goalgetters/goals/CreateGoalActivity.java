@@ -153,7 +153,7 @@ public class CreateGoalActivity extends AppCompatActivity {
                 } else {
                     goal = new Goal(title.toString(), unitText.getText().toString(),
                             Integer.parseInt(amountText.getText().toString()), 0, deadlineDate.getTime(), startDate.getTime(),
-                            "Self");
+                            "Just Me");
                 }
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -174,8 +174,8 @@ public class CreateGoalActivity extends AppCompatActivity {
 
                 String key = myRef.push().getKey();
                 myRef.child(key).setValue(goal);
-                myRef.getParent().child("users").child(user.getUid()).child("goals").child(key).setValue(true);
-                myRef.getParent().child("groups").child(goalGroupKey).child("goals").child(key).setValue(true);
+                myRef.getParent().child("users").child(user.getUid()).child("goals").child(key).setValue(goal.getTitle());
+                myRef.getParent().child("groups").child(goalGroupKey).child("goals").child(key).setValue(goal.getTitle());
                 finish();
             }
         });
@@ -200,7 +200,15 @@ public class CreateGoalActivity extends AppCompatActivity {
         ref.limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                goalGroupKey = dataSnapshot.getChildren().iterator().next().getKey();
+                if(Singleton.get().getCurrentGroupName() == null) {
+                    goalGroupKey = dataSnapshot.getChildren().iterator().next().getKey();
+                } else {
+                    for(DataSnapshot dataGroup : dataSnapshot.getChildren()) {
+                        if(dataGroup.getValue().equals(Singleton.get().getCurrentGroupName())) {
+                            goalGroupKey = dataGroup.getKey();
+                        }
+                    }
+                }
                 retrieveGroup();
             }
 
