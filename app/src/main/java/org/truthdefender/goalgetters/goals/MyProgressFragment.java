@@ -51,7 +51,6 @@ public class MyProgressFragment extends Fragment {
 
         reportProgressButton = (Button)v.findViewById(R.id.report_progress_button);
         reportProgressButton.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
                 show();
@@ -143,9 +142,8 @@ public class MyProgressFragment extends Fragment {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public void show() {
-        final Dialog reportDialog = new Dialog(this.getContext());
+        final Dialog reportDialog = new Dialog(getActivity());
         reportDialog.setTitle("Set Amount");
         reportDialog.setContentView(R.layout.report_progress_layout);
         Button setBtn = (Button) reportDialog.findViewById(R.id.setBtn);

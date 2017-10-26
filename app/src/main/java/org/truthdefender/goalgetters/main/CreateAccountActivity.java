@@ -126,9 +126,9 @@ public class CreateAccountActivity extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            joinSuccess = false;
+                            onSignupFailed();
                         } else {
-                            joinSuccess = true;
+                            onSignupSuccess();
                         }
                         // ...
                     }
@@ -137,13 +137,6 @@ public class CreateAccountActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        if(joinSuccess) {
-                            onSignupSuccess();
-                        } else {
-                            onSignupFailed();
-                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
@@ -182,7 +175,6 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
         startActivity(intent);
-        finish();
     }
 
     public void onSignupFailed() {

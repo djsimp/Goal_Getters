@@ -138,12 +138,14 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithEmail:failed", task.getException());
                             Toast.makeText(LoginActivity.this, R.string.auth_failed,
                                     Toast.LENGTH_SHORT).show();
-                            loginSuccess = false;
+                            onLoginFailed();
                         } else {
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             if (user != null) {
                                 Singleton.get().setUserId(user.getUid());
-                                loginSuccess = true;
+                                onLoginSuccess();
+                            } else {
+                                onLoginFailed();
                             }
                         }
 
@@ -154,12 +156,6 @@ public class LoginActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        if(loginSuccess) {
-                            onLoginSuccess();
-                        } else {
-                            onLoginFailed();
-                        }
                         progressDialog.dismiss();
                     }
                 }, 3000);
