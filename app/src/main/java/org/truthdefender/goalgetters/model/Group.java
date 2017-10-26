@@ -1,6 +1,7 @@
 package org.truthdefender.goalgetters.model;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by dj on 10/21/17.
@@ -8,10 +9,10 @@ import java.util.List;
 
 public class Group {
     String name;
-    List<Person> members;
-    List<Goal> goals;
+    HashMap<String, String> members;
+    HashMap<String, Boolean> goals;
 
-    public Group(String name, List<Person> members, List<Goal> goals) {
+    public Group(String name, HashMap<String, String> members, HashMap<String, Boolean> goals) {
         this.name = name;
         this.members = members;
         this.goals = goals;
@@ -19,11 +20,20 @@ public class Group {
 
     public Group() {}
 
-    public List<Person> getMembers() {
+    public HashMap<String, String> getMembers() {
         return members;
     }
 
-    public void setMembers(List<Person> members) {
+    public String getMemberList() {
+        StringBuilder sb = new StringBuilder();
+        for(Map.Entry<String, String> member : members.entrySet()) {
+            sb.append(member.getValue()).append(", ");
+        }
+        sb.delete(sb.length()-2, sb.length()-1);
+        return sb.toString();
+    }
+
+    public void setMembers(HashMap<String, String> members) {
         this.members = members;
     }
 
@@ -33,5 +43,13 @@ public class Group {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public HashMap<String, Boolean> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(HashMap<String, Boolean> goals) {
+        this.goals = goals;
     }
 }

@@ -16,6 +16,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Group;
 import org.truthdefender.goalgetters.model.Person;
@@ -24,12 +32,16 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class MyGroupsFragment extends Fragment {
 
     private TextView mSectionTitle;
     private RecyclerView mGroupsRecyclerView;
     private FloatingActionButton createGroupButton;
+
+    static List<String> groupList;
+    static List<Group> myGroups;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,27 +69,94 @@ public class MyGroupsFragment extends Fragment {
             }
         });
 
-        updateUI();
-
 
         return v;
     }
 
-    private List<Group> generateGroups() {
-        List<Group> groups = new ArrayList<>();
-        for(int i = 0; i < 10; i++) {
-            groups.add(new Group("The Group Who Shall Not Be Named", null, null));
-        }
-        return groups;
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeGroupList();
     }
 
-    //Recycler view copy
+    public void initializeGroupList() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/groups");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                groupList = new ArrayList<String>();
+                for(DataSnapshot dataGroup : dataSnapshot.getChildren()) {
+                    groupList.add(dataGroup.getKey());
+                }
+                initializeGroups();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //handle databaseError
+            }
+        });
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                groupList = new ArrayList<String>();
+                for(DataSnapshot dataGroup : dataSnapshot.getChildren()) {
+                    if(!groupList.contains(dataGroup.getKey())) {
+                        groupList.add(dataGroup.getKey());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //handle databaseError
+            }
+        });
+    }
+
+    public void initializeGroups() {
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("groups");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                myGroups = new ArrayList<Group>();
+                for(DataSnapshot dataGroup : dataSnapshot.getChildren()) {
+                    if(groupList.contains(dataGroup.getKey())) {
+                        myGroups.add(dataGroup.getValue(Group.class));
+                    }
+                }
+                updateUI();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                myGroups = new ArrayList<Group>();
+                for(DataSnapshot dataGroup : dataSnapshot.getChildren()) {
+                    if(groupList.contains(dataGroup.getKey())) {
+                        myGroups.add(dataGroup.getValue(Group.class));
+                    }
+                }
+                updateUI();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     private void updateUI() {
-        //List<Group> Groups = GroupGroups.getMyGroups();
-        List<Group> groups = generateGroups();
-
-        GroupAdapter mGroupAdapter = new GroupAdapter(groups);
+        GroupAdapter mGroupAdapter = new GroupAdapter(myGroups);
         mGroupsRecyclerView.setAdapter(mGroupAdapter);
     }
 
@@ -97,7 +176,6 @@ public class MyGroupsFragment extends Fragment {
             mGroupCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    PeopleEvents.get().setCurrentEvent(mEvent);
                     Intent intent = new Intent(getActivity(), GroupActivity.class);
                     startActivity(intent);
                 }
@@ -109,8 +187,8 @@ public class MyGroupsFragment extends Fragment {
 
         private void bindGroup(Group group) {
             mGroup = group;
-           // mGroupTitle.setText(group.getTitle());
-            //mDaysLeft.setText("21 Days Left");
+            mGroupName.setText(group.getName());
+            mGroupMemberList.setText(group.getMemberList());
         }
     }
 
@@ -137,6 +215,9 @@ public class MyGroupsFragment extends Fragment {
 
         @Override
         public int getItemCount() {
+            if(mGroups == null) {
+                return 0;
+            }
             return mGroups.size();
         }
     }

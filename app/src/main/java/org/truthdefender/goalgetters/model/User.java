@@ -1,6 +1,7 @@
 package org.truthdefender.goalgetters.model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -9,17 +10,18 @@ import java.util.List;
 
 public class User {
 
+    private String uuid;
     private String name;
     private String email;
     private int profileImageTag;
-    private List<Group> groups;
-    private List<Goal> goals;
+    private HashMap<String,Boolean> groups;
+    private HashMap<String,Boolean> goals;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String name, String email, int profileImageTag, List<Group> groups, List<Goal> goals) {
+    public User(String name, String email, int profileImageTag, HashMap<String,Boolean> groups, HashMap<String,Boolean> goals) {
         this.name = name;
         this.email = email;
         this.profileImageTag = profileImageTag;
@@ -31,8 +33,8 @@ public class User {
         this.name = name;
         this.email = email;
         this.profileImageTag = profileImageTag;
-        this.groups = new ArrayList<>();
-        this.goals = new ArrayList<>();
+        this.groups = new HashMap<>();
+        this.goals = new HashMap<>();
     }
 
     public String getName() {
@@ -59,27 +61,35 @@ public class User {
         this.profileImageTag = profileImageTag;
     }
 
-    public List<Group> getGroups() {
+    public HashMap<String,Boolean> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Group> groups) {
+    public void setGroups(HashMap<String,Boolean> groups) {
         this.groups = groups;
     }
 
-    public void addGroup(Group group) {
-        groups.add(group);
+    public void addGroup(String group) {
+        groups.put(group, true);
     }
 
-    public List<Goal> getGoals() {
+    public HashMap<String,Boolean> getGoals() {
         return goals;
     }
 
-    public void setGoals(List<Goal> goals) {
+    public void setGoals(HashMap<String,Boolean> goals) {
         this.goals = goals;
     }
 
-    public void addGoal(Goal goal) {
-        goals.add(goal);
+    public void addGoal(String goal) {
+        goals.put(goal, true);
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

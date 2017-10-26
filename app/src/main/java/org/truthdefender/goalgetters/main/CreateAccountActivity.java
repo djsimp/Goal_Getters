@@ -18,12 +18,18 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.truthdefender.goalgetters.R;
+import org.truthdefender.goalgetters.model.Goal;
 import org.truthdefender.goalgetters.model.Singleton;
 import org.truthdefender.goalgetters.model.User;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -147,10 +153,32 @@ public class CreateAccountActivity extends AppCompatActivity {
         _signupButton.setEnabled(true);
         Singleton.get().setUser(new User(_nameText.getText().toString(), _emailText.getText().toString(),
                 Singleton.get().getUser().getProfileImageTag()));
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = user.getUid();
+        Singleton.get().setUserId(userId);
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
-        String userId = myRef.push().getKey();
         myRef.child(userId).setValue(Singleton.get().getUser());
+
+        String groupKey = myRef.getParent().child("groups").push().getKey();
+        myRef.getParent().child("groups").child(groupKey).child("name").setValue("Just Me");
+        myRef.getParent().child("groups").child(groupKey).child("members").child(userId).setValue(Singleton.get().getUser().getName());
+        myRef.child(userId).child("groups").child(groupKey).setValue(true);
+
+        GregorianCalendar today = (GregorianCalendar)Calendar.getInstance();
+        int dayOfMonth = today.get(Calendar.DAY_OF_MONTH);
+        GregorianCalendar tomorrow = (GregorianCalendar)Calendar.getInstance();
+        tomorrow.set(Calendar.DAY_OF_MONTH, dayOfMonth + 1);
+        Goal firstGoal = new Goal("Create 1 goal", "goals", 1, 0, tomorrow.getTime(), today.getTime());
+
+        String goalKey = myRef.getParent().child("goals").push().getKey();
+        myRef.getParent().child("goals").child(goalKey).setValue(firstGoal);
+        myRef.getParent().child("goals").child(goalKey).child("group").setValue(groupKey);
+        myRef.child(userId).child("goals").child(goalKey).setValue(true);
+
+        myRef.getParent().child("groups").child(groupKey).child("goals").child(goalKey).setValue(true);
+
         Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

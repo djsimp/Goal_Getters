@@ -61,8 +61,8 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public UserHolder(View itemView) {
             super(itemView);
 
-            nameText = (TextView) itemView.findViewById(R.id.text_user_list_nickname);
-            profileImage = (ImageView) itemView.findViewById(R.id.image_user_list_profile);
+            nameText = (TextView) itemView.findViewById(R.id.user_name);
+            profileImage = (ImageView) itemView.findViewById(R.id.user_profile_icon);
         }
 
 

@@ -141,6 +141,8 @@ public class LoginActivity extends AppCompatActivity {
                                 String uid = user.getUid();
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                                 DatabaseReference myRef = database.getReference("users/" + uid);
+
+
                                 //Singleton.get().setUser(myRef.getValue(User.class));
                             }
                         }

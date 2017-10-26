@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +16,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Goal;
@@ -26,12 +33,17 @@ import org.truthdefender.goalgetters.model.Singleton;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MyGoalsFragment extends Fragment {
 
     private RecyclerView mGoalsRecyclerView;
     private FloatingActionButton createGoalButton;
+
+    static List<String> goalList = new ArrayList<>();
+    static List<Goal> myGoals = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,22 +67,95 @@ public class MyGoalsFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-        updateUI();
-
-
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeGoalsList();
+    }
+
+    public void initializeGoalsList() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/goals");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                goalList = new ArrayList<String>();
+                for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
+                        goalList.add(dataGoal.getKey());
+                }
+                initializeGoals();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //handle databaseError
+            }
+        });
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                goalList = new ArrayList<String>();
+                for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
+                        goalList.add(dataGoal.getKey());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //handle databaseError
+            }
+        });
+    }
+
+    public void initializeGoals() {
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("goals");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                myGoals = new ArrayList<Goal>();
+                for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
+                    if(goalList.contains(dataGoal.getKey())) {
+                        myGoals.add(dataGoal.getValue(Goal.class));
+                    }
+                }
+                updateUI();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                myGoals = new ArrayList<Goal>();
+                for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
+                    if(goalList.contains(dataGoal.getKey())) {
+                        myGoals.add(dataGoal.getValue(Goal.class));
+                    }
+                }
+                updateUI();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     //Recycler view copy
 
     private void updateUI() {
-        List<Goal> goals = Singleton.get().getGoals();
-
-        GoalAdapter mGoalAdapter = new GoalAdapter(goals);
+        GoalAdapter mGoalAdapter = new GoalAdapter(myGoals);
         mGoalsRecyclerView.setAdapter(mGoalAdapter);
     }
-
 
     private class GoalHolder extends RecyclerView.ViewHolder {
 
@@ -88,11 +173,10 @@ public class MyGoalsFragment extends Fragment {
         private GoalHolder(View itemView) {
             super(itemView);
 
-            mListItemGoal = (LinearLayout)itemView.findViewById(R.id.list_item_goal);
+            mListItemGoal = (LinearLayout) itemView.findViewById(R.id.list_item_goal);
             mListItemGoal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    PeopleEvents.get().setCurrentEvent(mEvent);
                     Intent intent = new Intent(getActivity(), GoalActivity.class);
                     startActivity(intent);
                 }
@@ -109,17 +193,34 @@ public class MyGoalsFragment extends Fragment {
         private void bindGoal(Goal goal) {
             mGoal = goal;
             mGoalTitle.setText(goal.getTitle());
-            mDaysLeft.setText("21 Days Left");
+            String status = goal.getStatus();
+            mGoalStatus.setText(status);
+            if(status.substring(status.length()-5).equals("ahead")) {
+                mListItemGoal.setBackgroundColor(getResources().getColor(R.color.positive_color));
+            } else if(status.substring(status.length()-5).equals("behind")) {
+                mListItemGoal.setBackgroundColor(getResources().getColor(R.color.negative_color));
+            }
+            mDaysLeft.setText(goal.getDaysLeft());
             LinearLayout.LayoutParams progParams = new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT,
-                    (float)(goal.getProgress() / goal.getGoal())
+                    goal.getPercentComplete()
             );
             mProgressBar.setLayoutParams(progParams);
             LinearLayout.LayoutParams invProgParams = new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT,
-                    (float)(1 - (goal.getProgress() / goal.getGoal()))
+                    goal.getPercentLeft()
             );
             mInvProgressBar.setLayoutParams(invProgParams);
+            LinearLayout.LayoutParams timeParams = new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT,
+                    goal.getPercentTimeTaken()
+            );
+            mToDateBar.setLayoutParams(timeParams);
+            LinearLayout.LayoutParams invTimeParams = new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT,
+                    goal.getPercentTimeLeft()
+            );
+            mInvToDateBar.setLayoutParams(invTimeParams);
         }
     }
 

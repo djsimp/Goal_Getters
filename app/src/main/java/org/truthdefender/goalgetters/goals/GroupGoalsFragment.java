@@ -23,6 +23,7 @@ import org.truthdefender.goalgetters.model.Person;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class GroupGoalsFragment extends Fragment {
@@ -68,7 +69,7 @@ public class GroupGoalsFragment extends Fragment {
     private List<Goal> generateGoals() {
         List<Goal> goals = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
-            goals.add(new Goal("This is a Great Goal", "$", 5000, 2500, Calendar.getInstance(), Calendar.getInstance(), new Group("hi", null, null)));
+            goals.add(new Goal("This is a Great Goal", "$", 5000, 2500, Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), "Hello"));
         }
         return goals;
     }

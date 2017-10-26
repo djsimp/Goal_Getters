@@ -18,6 +18,11 @@
     <string name="main_drawer_close">Close navigation drawer</string>
     <string name="select_channel_type">Select channel type</string>
 
+    <!-- create group -->
+    <string name="create_group_label">Create Group</string>
+    <string name="search_members">Search to add members</string>
+    <string name="group_name_label">Group Name</string>
+
     <!-- create goal -->
     <string name="create_goal_label">Create Goal</string>
     <string name="prompt_username">Username</string>
@@ -95,6 +100,7 @@
 
 
     <!-- Goal Getters -->
+    <string name="create_group">Create Group</string>
     <string name="create_goal">Create Goal</string>
     <string name="report_progress">REPORT PROGRESS</string>
     <string name="description">Description</string>
