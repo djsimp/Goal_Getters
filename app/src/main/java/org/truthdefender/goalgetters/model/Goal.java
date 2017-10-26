@@ -190,19 +190,23 @@ public class Goal {
     }
 
     public String getDaysLeft() {
-        float daysleft = TimeUnit.DAYS.convert(getTimeLeft(), TimeUnit.MILLISECONDS);
+        double daysleft = TimeUnit.DAYS.convert(getTimeLeft(), TimeUnit.MILLISECONDS);
         StringBuilder sb = new StringBuilder();
         if(daysleft > 1) {
-            sb.append(Math.floor(daysleft));
-            if(Math.floor(daysleft) == 1) {
+            Double myDouble = Double.valueOf(daysleft);
+            Integer days = Integer.valueOf(myDouble.intValue());
+            sb.append(days);
+            if(days == 1) {
                 sb.append(" day left");
             } else {
                 sb.append(" days left");
             }
         } else {
             daysleft = TimeUnit.HOURS.convert(getTimeLeft(), TimeUnit.MILLISECONDS);
-            sb.append(Math.floor(daysleft));
-            if(Math.floor(daysleft) == 1) {
+            Double myDouble = Double.valueOf(daysleft);
+            Integer hours = Integer.valueOf(myDouble.intValue());
+            sb.append(hours);
+            if(hours == 1) {
                 sb.append(" hour left");
             } else {
                 sb.append(" hours left");

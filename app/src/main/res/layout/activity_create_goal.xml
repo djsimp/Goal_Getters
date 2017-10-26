@@ -104,11 +104,12 @@
 
         <ImageButton
             android:id="@+id/start_date_picker"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:scaleType="centerInside"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:src="@drawable/calender_button"
+            android:background="@android:color/transparent"
+            android:src="@drawable/calendar_icon"
             android:onClick="showStartDatePickerDialog"/>
         <TextView
             android:id="@+id/start_date"
@@ -129,11 +130,12 @@
             android:layout_gravity="end">
         <ImageButton
             android:id="@+id/deadline_date_picker"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:scaleType="centerInside"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:src="@drawable/calender_button"
+            android:background="@android:color/transparent"
+            android:src="@drawable/calendar_icon"
             android:onClick="showDeadlinePickerDialog"/>
         <TextView
             android:id="@+id/deadline_date"

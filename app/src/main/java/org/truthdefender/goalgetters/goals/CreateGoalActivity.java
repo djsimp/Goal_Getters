@@ -1,12 +1,14 @@
 package org.truthdefender.goalgetters.goals;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.os.Bundle;
 import android.app.FragmentManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -64,6 +67,8 @@ public class CreateGoalActivity extends AppCompatActivity {
 
     String goalGroupKey;
     Group goalGroup;
+    List<String> groupNames;
+    List<Group> groupList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +103,7 @@ public class CreateGoalActivity extends AppCompatActivity {
         chooseGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(CreateGoalActivity.this, SelectGroupFragment.class);
+                showDialog();
             }
         });
 
@@ -208,13 +213,19 @@ public class CreateGoalActivity extends AppCompatActivity {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                groupList = new ArrayList<Group>();
+                groupNames = new ArrayList<String>();
                 for(DataSnapshot dataGroup : dataSnapshot.getChildren()) {
+                    goalGroup = dataGroup.getValue(Group.class);
+                    if(goalGroup.getMembers().containsKey(user.getUid())) {
+                        groupNames.add(dataGroup.child("name").getValue(String.class));
+                        groupList.add(goalGroup);
+                    }
                     if(goalGroupKey.equals(dataGroup.getKey())) {
-                        goalGroup = dataGroup.getValue(Group.class);
                         groupName.setText(goalGroup.getName());
                         groupMemberList.setText(goalGroup.getMemberList());
                         Singleton.get().setCurrentGroup(goalGroup);
-                        return;
                     }
                 }
             }
@@ -224,6 +235,46 @@ public class CreateGoalActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateGoalActivity.this);
+        builder.setTitle(R.string.select_group_dialog_title);
+
+        //list of items
+        String[] items = new String[groupNames.size()];
+        for(int i = 0; i < groupNames.size(); i++) {
+            items[i] = groupNames.get(i);
+        }
+        builder.setSingleChoiceItems(items, 0,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // item selected logic
+                    }
+                });
+
+        String positiveText = getString(android.R.string.ok);
+        builder.setPositiveButton(positiveText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // positive button logic
+                    }
+                });
+
+        String negativeText = getString(android.R.string.cancel);
+        builder.setNegativeButton(negativeText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // negative button logic
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        // display dialog
+        dialog.show();
     }
 
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {

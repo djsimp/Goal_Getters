@@ -27,6 +27,7 @@
     <string name="create_goal_label">Create Goal</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_name">Name</string>
+    <string name="select_group_dialog_title">Choose Group</string>
 
     <!-- goal -->
     <string name="activity_goal_label">Goal Progress</string>
