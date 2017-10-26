@@ -188,15 +188,6 @@ public class CreateGoalActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
-//        startDateButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                DialogFragment newFragment = new DatePickerFragment();
-//                newFragment.show(getSupportFragmentManager(), "startDatePicker");
-//            }
-//        });
-
     }
 
     public void initializeGroupCard() {
@@ -284,14 +275,6 @@ public class CreateGoalActivity extends AppCompatActivity {
         // display dialog
         dialog.show();
     }
-
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        deadlineText.setText("lol");
-    }
-
-
-
-
 
     @Override
     public boolean onSupportNavigateUp() {
