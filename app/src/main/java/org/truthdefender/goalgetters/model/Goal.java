@@ -22,6 +22,7 @@ public class Goal {
     private Date startdate;
     private String group;
     private List<Progress> progress_log;
+    private String goalId;
 
     public Goal(String title, String units, int goal, int progress, Date deadline, Date startdate, String group) {
         this.title = title;
@@ -233,5 +234,13 @@ public class Goal {
 
     public void addProgressToLog(Progress progress) {
         this.progress_log.add(progress);
+    }
+
+    public String getGoalId() {
+        return goalId;
+    }
+
+    public void setGoalId(String goalId) {
+        this.goalId = goalId;
     }
 }

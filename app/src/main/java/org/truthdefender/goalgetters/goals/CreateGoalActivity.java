@@ -113,8 +113,6 @@ public class CreateGoalActivity extends AppCompatActivity {
         groupName.setText("");
         groupMemberList.setText("");
 
-        initializeGroupCard();
-
         createGoalButton = (Button)findViewById(R.id.create_goal_button);
         createGoalButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,6 +195,12 @@ public class CreateGoalActivity extends AppCompatActivity {
 //            }
 //        });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeGroupCard();
     }
 
     public void initializeGroupCard() {

@@ -16,6 +16,9 @@ public class Singleton {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String userId;
+    private String goalId;
+    private String groupId;
+    private String currentGroupName;
     private User user;
     private List<Goal> goals;
     private List<Group> groups;
@@ -60,6 +63,22 @@ public class Singleton {
         this.userId = userId;
     }
 
+    public String getGoalId() {
+        return goalId;
+    }
+
+    public void setGoalId(String goalId) {
+        this.goalId = goalId;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
     public User getUser() {
         return user;
     }
@@ -90,6 +109,14 @@ public class Singleton {
 
     public void setGroups(List<Group> groups) {
         this.groups = groups;
+    }
+
+    public String getCurrentGroupName() {
+        return currentGroupName;
+    }
+
+    public void setCurrentGroupName(String currentGroupName) {
+        this.currentGroupName = currentGroupName;
     }
 
     public Group getCurrentGroup() { return currentGroup; }

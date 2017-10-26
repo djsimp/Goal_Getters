@@ -138,6 +138,7 @@ public class MyGoalsFragment extends Fragment {
                 for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
                     if(goalList.contains(dataGoal.getKey())) {
                         myGoals.add(dataGoal.getValue(Goal.class));
+                        myGoals.get(myGoals.size()-1).setGoalId(dataGoal.getKey());
                     }
                 }
                 updateUI();
@@ -177,6 +178,7 @@ public class MyGoalsFragment extends Fragment {
             mListItemGoal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Singleton.get().setCurrentGoal(mGoal);
                     Intent intent = new Intent(getActivity(), GoalActivity.class);
                     startActivity(intent);
                 }

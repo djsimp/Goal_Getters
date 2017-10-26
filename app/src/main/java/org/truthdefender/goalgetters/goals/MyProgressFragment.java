@@ -21,10 +21,19 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Goal;
 import org.truthdefender.goalgetters.model.Person;
 import org.truthdefender.goalgetters.model.Progress;
+import org.truthdefender.goalgetters.model.Singleton;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +43,7 @@ public class MyProgressFragment extends Fragment {
 
     private RecyclerView mProgressLogRecyclerView;
     private Button reportProgressButton;
+    private List<Progress> progressLog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,28 +73,15 @@ public class MyProgressFragment extends Fragment {
         return v;
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 
+    private void reportLog(int amount, String report) {
 
-    private List<Progress> generateProgress() {
-        List<Progress> log = new ArrayList<>();
-        for(int i = 0; i < 15; i++) {
-            if(i%2 == 0) {
-                log.add(new Progress("October 20, 2017", "+$150 - I am making some great progress!"));
-            } else {
-                log.add(new Progress("October 20, 2017", "-$100 - Another one bites the dust!"));
-            }
-        }
-        return log;
     }
 
     //Recycler view copy
 
     private void updateUI() {
-        List<Progress> log = generateProgress();
+        List<Progress> log = Singleton.get().getCurrentGoal().getProgressLog();
 
         ProgressAdapter mProgressAdapter = new ProgressAdapter(log);
         mProgressLogRecyclerView.setAdapter(mProgressAdapter);
@@ -152,6 +149,19 @@ public class MyProgressFragment extends Fragment {
         final EditText description = (EditText) reportDialog.findViewById(R.id.report_description);
 
         final NumberPicker numberPicker = (NumberPicker) reportDialog.findViewById(R.id.number_picker);
+
+//        final int minValue = -500;
+//        final int maxValue = 500;
+//        numberPicker.setMinValue(0);
+//        numberPicker.setMaxValue(maxValue - minValue);
+//        numberPicker.setValue(0 - minValue);
+//        numberPicker.setFormatter(new NumberPicker.Formatter() {
+//            @Override
+//            public String format(int index) {
+//                return Integer.toString(index + minValue);
+//            }
+//        });
+
         numberPicker.setMaxValue(1000000);
         numberPicker.setMinValue(0);
         numberPicker.setWrapSelectorWheel(false);
@@ -169,6 +179,7 @@ public class MyProgressFragment extends Fragment {
                 String report = description.getText().toString();
 
                 reportDialog.dismiss();
+                reportLog(Integer.valueOf(number), report);
             }
         });
 

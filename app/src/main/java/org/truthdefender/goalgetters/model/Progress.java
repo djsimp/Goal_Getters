@@ -7,6 +7,8 @@ package org.truthdefender.goalgetters.model;
 public class Progress {
     String date;
     String report;
+    String userId;
+    String name;
 
     public Progress(String date, String report) {
         this.date = date;
@@ -29,5 +31,21 @@ public class Progress {
 
     public void setReport(String report) {
         this.report = report;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
