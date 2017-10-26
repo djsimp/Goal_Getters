@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
@@ -50,6 +51,7 @@ public class MyProgressFragment extends Fragment {
 
         reportProgressButton = (Button)v.findViewById(R.id.report_progress_button);
         reportProgressButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
                 show();
@@ -149,6 +151,8 @@ public class MyProgressFragment extends Fragment {
         Button setBtn = (Button) reportDialog.findViewById(R.id.setBtn);
         Button cnlBtn = (Button) reportDialog.findViewById(R.id.CancelButton_NumberPicker);
 
+        final EditText description = (EditText) reportDialog.findViewById(R.id.report_description);
+
         final NumberPicker numberPicker = (NumberPicker) reportDialog.findViewById(R.id.number_picker);
         numberPicker.setMaxValue(1000000);
         numberPicker.setMinValue(0);
@@ -164,6 +168,7 @@ public class MyProgressFragment extends Fragment {
             public void onClick(View view) {
                 //We're going to have to make some kind of call to the server here................
                 String number = String.valueOf(numberPicker.getValue());
+                String report = description.getText().toString();
 
                 reportDialog.dismiss();
             }
