@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
@@ -59,6 +60,8 @@ public class MyProgressFragment extends Fragment {
         mProgressLogRecyclerView = (RecyclerView)v.findViewById(R.id.my_progress_recycler_view);
         mProgressLogRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+
+        //Update Person Information
         reportProgressButton = (Button)v.findViewById(R.id.report_progress_button);
         reportProgressButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +69,18 @@ public class MyProgressFragment extends Fragment {
                 show();
             }
         });
+
+        TextView personName = (TextView) v.findViewById(R.id.person_name);
+        personName.setText(Singleton.get().getUser().getName());
+
+        TextView goalText = (TextView) v.findViewById(R.id.goalText);
+        goalText.setText(Singleton.get().getCurrentGoal().getTitle());
+
+
+
+        ImageView profile = (ImageView) v.findViewById(R.id.profile_picture);
+        //profile.setBackground();
+        //Finish updating person information
 
         updateUI();
 
@@ -82,6 +97,9 @@ public class MyProgressFragment extends Fragment {
 
     private void updateUI() {
         List<Progress> log = Singleton.get().getCurrentGoal().getProgressLog();
+
+
+
 
         ProgressAdapter mProgressAdapter = new ProgressAdapter(log);
         mProgressLogRecyclerView.setAdapter(mProgressAdapter);
@@ -148,6 +166,8 @@ public class MyProgressFragment extends Fragment {
         reportDialog.setContentView(R.layout.report_progress_layout);
         Button setBtn = (Button) reportDialog.findViewById(R.id.setBtn);
         Button cnlBtn = (Button) reportDialog.findViewById(R.id.CancelButton_NumberPicker);
+        TextView units = (TextView) reportDialog.findViewById(R.id.report_units);
+        units.setText(Singleton.get().getCurrentGoal().getUnits());
 
         final EditText description = (EditText) reportDialog.findViewById(R.id.report_description);
 

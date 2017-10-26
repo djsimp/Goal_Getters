@@ -197,7 +197,7 @@ public class CreateGoalActivity extends AppCompatActivity {
     public void initializeGroupCard() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/groups");
-        ref.limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(Singleton.get().getCurrentGroupName() == null) {

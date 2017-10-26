@@ -68,7 +68,7 @@
         <android.support.design.widget.TextInputEditText
             android:id="@+id/edittext_units"
             android:hint="@string/units"
-            android:inputType="textCapSentences"
+            android:inputType="text"
             android:imeOptions="actionDone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
