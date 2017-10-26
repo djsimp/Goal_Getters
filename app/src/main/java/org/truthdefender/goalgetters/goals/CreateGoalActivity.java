@@ -125,18 +125,26 @@ public class CreateGoalActivity extends AppCompatActivity {
                         .append(unitText.getText());
 
                 String startText = startDateText.getText().toString();
+                String[] startParts = startText.split("/");
+                int startMonth = Integer.parseInt(startParts[0])-1;
+                int startDay = Integer.parseInt(startParts[1]);
+                int startYear = Integer.parseInt(startParts[2]);
 
                 GregorianCalendar startDate = (GregorianCalendar)Calendar.getInstance();
-                startDate.set(Calendar.MONTH, Integer.parseInt(startText.substring(0,2)));
-                startDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(startText.substring(3,5)));
-                startDate.set(Calendar.YEAR, Integer.parseInt(startText.substring(6)));
+                startDate.set(Calendar.MONTH, startMonth);
+                startDate.set(Calendar.DAY_OF_MONTH, startDay);
+                startDate.set(Calendar.YEAR, startYear);
 
                 String endText = deadlineText.getText().toString();
 
                 GregorianCalendar deadlineDate = (GregorianCalendar)Calendar.getInstance();
-                deadlineDate.set(Calendar.MONTH, Integer.parseInt(endText.substring(0,2)));
-                deadlineDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(endText.substring(3,5)));
-                deadlineDate.set(Calendar.YEAR, Integer.parseInt(endText.substring(6)));
+                String[] dateParts = endText.split("/");
+                int deadMonth = Integer.parseInt(dateParts[0])-1;
+                int deadDay = Integer.parseInt(dateParts[1]);
+                int deadYear = Integer.parseInt(dateParts[2]);
+                deadlineDate.set(Calendar.MONTH, deadMonth);
+                deadlineDate.set(Calendar.DAY_OF_MONTH, deadDay);
+                deadlineDate.set(Calendar.YEAR, deadYear);
 
                 Group currentGroup = Singleton.get().getCurrentGroup();
                 Goal goal;
