@@ -1,5 +1,6 @@
 package org.truthdefender.goalgetters.goals;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.os.Bundle;
@@ -47,7 +48,7 @@ import java.util.Locale;
 
 public class CreateGoalActivity extends AppCompatActivity {
     TextInputEditText actionText;
-    NumberPicker amountText;
+    TextView amountText;
     TextInputEditText unitText;
 
     ImageButton startDateButton;
@@ -70,11 +71,8 @@ public class CreateGoalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_goal);
 
         actionText = (TextInputEditText)findViewById(R.id.edittext_action);
-        amountText = (NumberPicker)findViewById(R.id.number_picker);
-        amountText.setMinValue(0);
-        amountText.setMaxValue(1000000);
-        amountText.setWrapSelectorWheel(false);
         unitText = (TextInputEditText)findViewById(R.id.edittext_units);
+        amountText = (TextView) findViewById(R.id.amount);
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
@@ -86,6 +84,17 @@ public class CreateGoalActivity extends AppCompatActivity {
 
         deadlineButton = (ImageButton)findViewById(R.id.deadline_date_picker);
         deadlineText = (TextView)findViewById(R.id.deadline_date);
+        deadlineText.setText("Deadline");
+
+        Button amountButton = (Button) findViewById(R.id.number_picker_button);
+        amountButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                show();
+            }
+        });
 
         chooseGroupButton = (CardView)findViewById(R.id.group_card);
         chooseGroupButton.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +118,7 @@ public class CreateGoalActivity extends AppCompatActivity {
             public void onClick(View v) {
                 StringBuilder title = new StringBuilder();
                 title.append(actionText.getText()).append(" ")
-                        .append(amountText.getValue()).append(" ")
+                        .append(amountText.getText()).append(" ")
                         .append(unitText.getText());
 
                 String startText = startDateText.getText().toString();
@@ -130,11 +139,11 @@ public class CreateGoalActivity extends AppCompatActivity {
                 Goal goal;
                 if(currentGroup != null) {
                     goal = new Goal(title.toString(), unitText.getText().toString(),
-                            amountText.getValue(), 0, deadlineDate.getTime(), startDate.getTime(),
+                            Integer.parseInt(amountText.getText().toString()), 0, deadlineDate.getTime(), startDate.getTime(),
                             Singleton.get().getCurrentGroup().getName());
                 } else {
                     goal = new Goal(title.toString(), unitText.getText().toString(),
-                            amountText.getValue(), 0, deadlineDate.getTime(), startDate.getTime(),
+                            Integer.parseInt(amountText.getText().toString()), 0, deadlineDate.getTime(), startDate.getTime(),
                             "Self");
                 }
 
@@ -162,17 +171,12 @@ public class CreateGoalActivity extends AppCompatActivity {
             }
         });
 
-        //startDateButton.setText("HI");
-
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_create_goal);
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
-
-
 
 //        startDateButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -246,5 +250,45 @@ public class CreateGoalActivity extends AppCompatActivity {
     public void showDeadlinePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "deadlinePicker");
+    }
+
+    public void show() {
+        final Dialog npDialog = new Dialog(this);
+        npDialog.setTitle("NumberPicker Example");
+        npDialog.setContentView(R.layout.numberpicker_layout);
+        Button setBtn = (Button) npDialog.findViewById(R.id.setBtn);
+        Button cnlBtn = (Button) npDialog.findViewById(R.id.CancelButton_NumberPicker);
+
+        final NumberPicker numberPicker = (NumberPicker) npDialog.findViewById(R.id.numberPicker);
+        numberPicker.setMaxValue(1000000);
+        numberPicker.setMinValue(0);
+        numberPicker.setWrapSelectorWheel(false);
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                // TODO Auto-generated method stub
+            }
+        });
+        setBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Auto-generated method stub
+                TextView amount = (TextView) findViewById(R.id.amount);
+                String number = String.valueOf(numberPicker.getValue());
+                amount.setText(number);
+
+                npDialog.dismiss();
+            }
+        });
+
+        cnlBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                npDialog.dismiss();
+            }
+        });
+
+        npDialog.show();
     }
 }

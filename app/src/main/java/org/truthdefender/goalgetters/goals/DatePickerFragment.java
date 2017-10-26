@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TextView;
 
 import org.truthdefender.goalgetters.R;
 
@@ -37,8 +38,8 @@ public class DatePickerFragment extends DialogFragment
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Button deadline = (Button) getActivity().findViewById(R.id.deadline_date_picker);
+        TextView deadline = (TextView) getActivity().findViewById(R.id.deadline_date);
 
-        deadline.setText("HI");
+        deadline.setText(String.valueOf(month+1) + "/" + String.valueOf(dayOfMonth) + "/" + String.valueOf(year));
     }
 }
