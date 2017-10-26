@@ -161,6 +161,7 @@ public class MyGoalsFragment extends Fragment {
     private class GoalHolder extends RecyclerView.ViewHolder {
 
         private LinearLayout mListItemGoal;
+        private CardView mGoalCard;
         private TextView mGoalTitle;
         private View mGoalTotalBar;
         private View mProgressBar;
@@ -183,6 +184,7 @@ public class MyGoalsFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+            mGoalCard = (CardView)itemView.findViewById(R.id.goal_card);
             mGoalTitle = (TextView)itemView.findViewById(R.id.goal_title);
             mProgressBar = itemView.findViewById(R.id.progress_bar);
             mInvProgressBar = itemView.findViewById(R.id.inv_progress_bar);

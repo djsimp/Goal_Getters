@@ -10,9 +10,9 @@ import java.util.Map;
 public class Group {
     String name;
     HashMap<String, String> members;
-    HashMap<String, Boolean> goals;
+    HashMap<String, String> goals;
 
-    public Group(String name, HashMap<String, String> members, HashMap<String, Boolean> goals) {
+    public Group(String name, HashMap<String, String> members, HashMap<String, String> goals) {
         this.name = name;
         this.members = members;
         this.goals = goals;
@@ -45,11 +45,11 @@ public class Group {
         this.name = name;
     }
 
-    public HashMap<String, Boolean> getGoals() {
+    public HashMap<String, String> getGoals() {
         return goals;
     }
 
-    public void setGoals(HashMap<String, Boolean> goals) {
+    public void setGoals(HashMap<String, String> goals) {
         this.goals = goals;
     }
 }

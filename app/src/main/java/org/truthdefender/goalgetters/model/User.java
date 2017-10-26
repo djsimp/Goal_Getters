@@ -14,14 +14,14 @@ public class User {
     private String name;
     private String email;
     private int profileImageTag;
-    private HashMap<String,Boolean> groups;
-    private HashMap<String,Boolean> goals;
+    private HashMap<String,String> groups;
+    private HashMap<String,String> goals;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String name, String email, int profileImageTag, HashMap<String,Boolean> groups, HashMap<String,Boolean> goals) {
+    public User(String name, String email, int profileImageTag, HashMap<String,String> groups, HashMap<String,String> goals) {
         this.name = name;
         this.email = email;
         this.profileImageTag = profileImageTag;
@@ -61,28 +61,28 @@ public class User {
         this.profileImageTag = profileImageTag;
     }
 
-    public HashMap<String,Boolean> getGroups() {
+    public HashMap<String,String> getGroups() {
         return groups;
     }
 
-    public void setGroups(HashMap<String,Boolean> groups) {
+    public void setGroups(HashMap<String,String> groups) {
         this.groups = groups;
     }
 
-    public void addGroup(String group) {
-        groups.put(group, true);
+    public void addGroup(String groupid, String groupname) {
+        groups.put(groupid, groupname);
     }
 
-    public HashMap<String,Boolean> getGoals() {
+    public HashMap<String,String> getGoals() {
         return goals;
     }
 
-    public void setGoals(HashMap<String,Boolean> goals) {
+    public void setGoals(HashMap<String,String> goals) {
         this.goals = goals;
     }
 
-    public void addGoal(String goal) {
-        goals.put(goal, true);
+    public void addGoal(String goalid, String goalTitle) {
+        goals.put(goalid, goalTitle);
     }
 
     public String getUuid() {
