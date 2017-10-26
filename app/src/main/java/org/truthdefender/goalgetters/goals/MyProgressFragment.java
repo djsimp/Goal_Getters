@@ -110,6 +110,9 @@ public class MyProgressFragment extends Fragment {
 
         @Override
         public int getItemCount() {
+            if(mLogs == null) {
+                return 0;
+            }
             return mLogs.size();
         }
     }
