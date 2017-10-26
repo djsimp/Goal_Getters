@@ -88,10 +88,8 @@ public class CreateGoalActivity extends AppCompatActivity {
 
         Button amountButton = (Button) findViewById(R.id.number_picker_button);
         amountButton.setOnClickListener(new View.OnClickListener(){
-
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
                 show();
             }
         });
@@ -131,9 +129,9 @@ public class CreateGoalActivity extends AppCompatActivity {
                 String endText = deadlineText.getText().toString();
 
                 GregorianCalendar deadlineDate = (GregorianCalendar)Calendar.getInstance();
-                startDate.set(Calendar.MONTH, Integer.parseInt(endText.substring(0,2)));
-                startDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(endText.substring(3,5)));
-                startDate.set(Calendar.YEAR, Integer.parseInt(endText.substring(6)));
+                deadlineDate.set(Calendar.MONTH, Integer.parseInt(endText.substring(0,2)));
+                deadlineDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(endText.substring(3,5)));
+                deadlineDate.set(Calendar.YEAR, Integer.parseInt(endText.substring(6)));
 
                 Group currentGroup = Singleton.get().getCurrentGroup();
                 Goal goal;
@@ -254,7 +252,7 @@ public class CreateGoalActivity extends AppCompatActivity {
 
     public void show() {
         final Dialog npDialog = new Dialog(this);
-        npDialog.setTitle("NumberPicker Example");
+        npDialog.setTitle("Set Amount");
         npDialog.setContentView(R.layout.numberpicker_layout);
         Button setBtn = (Button) npDialog.findViewById(R.id.setBtn);
         Button cnlBtn = (Button) npDialog.findViewById(R.id.CancelButton_NumberPicker);
@@ -272,7 +270,6 @@ public class CreateGoalActivity extends AppCompatActivity {
         setBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Auto-generated method stub
                 TextView amount = (TextView) findViewById(R.id.amount);
                 String number = String.valueOf(numberPicker.getValue());
                 amount.setText(number);
@@ -284,7 +281,6 @@ public class CreateGoalActivity extends AppCompatActivity {
         cnlBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 npDialog.dismiss();
             }
         });

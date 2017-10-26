@@ -18,10 +18,6 @@ import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
-
-
-    boolean isStart;
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
@@ -30,16 +26,19 @@ public class DatePickerFragment extends DialogFragment
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-
-
         // Create a new instance of DatePickerDialog and return it
         return new DatePickerDialog(getActivity(), this, year, month, day);
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        TextView deadline = (TextView) getActivity().findViewById(R.id.deadline_date);
-
-        deadline.setText(String.valueOf(month+1) + "/" + String.valueOf(dayOfMonth) + "/" + String.valueOf(year));
+        String tag = this.getTag();
+        if(tag == "startDatePicker") {
+            TextView startDate = (TextView) getActivity().findViewById(R.id.start_date);
+            startDate.setText(String.valueOf(month+1) + "/" + String.valueOf(dayOfMonth) + "/" + String.valueOf(year));
+        } else {
+            TextView deadline = (TextView) getActivity().findViewById(R.id.deadline_date);
+            deadline.setText(String.valueOf(month+1) + "/" + String.valueOf(dayOfMonth) + "/" + String.valueOf(year));
+        }
     }
 }
