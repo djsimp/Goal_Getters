@@ -1,27 +1,19 @@
 package org.truthdefender.goalgetters.goals;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.icu.text.DateFormat;
 import android.os.Bundle;
-import android.app.FragmentManager;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageButton;
-import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,8 +26,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Goal;
+import org.truthdefender.goalgetters.model.GoalWrapper;
 import org.truthdefender.goalgetters.model.Group;
-import org.truthdefender.goalgetters.model.Singleton;
+import org.truthdefender.goalgetters.model.HabitGoal;
+import org.truthdefender.goalgetters.model.HabitGoalWrapper;
+import org.truthdefender.goalgetters.model.SmartGoal;
+import org.truthdefender.goalgetters.model.SmartGoalWrapper;
+import org.truthdefender.goalgetters.model.TaskGoal;
+import org.truthdefender.goalgetters.model.TaskGoalWrapper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,15 +42,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-
-/**
- * Created by dj on 10/18/17.
- */
+import java.util.Map;
 
 public class CreateGoalActivity extends AppCompatActivity {
-    TextInputEditText actionText;
-    TextView amountText;
-    TextInputEditText unitText;
+    CreateSmartFragment createSmartFragment;
+    CreateTaskFragment createTaskFragment;
+    CreateHabitFragment createHabitFragment;
+    Spinner goalTypeSpinner;
 
     ImageButton startDateButton;
     TextView startDateText;
@@ -70,36 +66,76 @@ public class CreateGoalActivity extends AppCompatActivity {
     List<String> groupNames;
     List<Group> groupList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_goal);
 
-        actionText = (TextInputEditText)findViewById(R.id.edittext_action);
-        unitText = (TextInputEditText)findViewById(R.id.edittext_units);
-        amountText = (TextView) findViewById(R.id.amount);
+        if(createSmartFragment == null) {
+            createSmartFragment = new CreateSmartFragment();
+        }
+        if(createTaskFragment == null) {
+            createTaskFragment = new CreateTaskFragment();
+        }
+        if(createHabitFragment == null) {
+            createHabitFragment = new CreateHabitFragment();
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.goal_layout, createSmartFragment)
+                .addToBackStack(null)
+                .commit();
 
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-
-        String currentDate = dateFormat.format(new Date());
-        startDateButton = (ImageButton) findViewById(R.id.start_date_picker);
-        startDateText = (TextView)findViewById(R.id.start_date);
-        startDateText.setText(currentDate);
-
-        deadlineButton = (ImageButton)findViewById(R.id.deadline_date_picker);
-        deadlineText = (TextView)findViewById(R.id.deadline_date);
-        deadlineText.setText("Deadline");
-
-        Button amountButton = (Button) findViewById(R.id.number_picker_button);
-        amountButton.setOnClickListener(new View.OnClickListener(){
+        goalTypeSpinner = findViewById(R.id.goal_type_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.goal_type_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        goalTypeSpinner.setAdapter(adapter);
+        goalTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View arg0) {
-                show();
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                switch(adapterView.getItemAtPosition(i).toString()) {
+                    case "Project":
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.goal_layout, createTaskFragment)
+                                .addToBackStack(null)
+                                .commit();
+                        break;
+                    case "Habit":
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.goal_layout, createHabitFragment)
+                                .addToBackStack(null)
+                                .commit();
+                        break;
+                    default:
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.goal_layout, createSmartFragment)
+                                .addToBackStack(null)
+                                .commit();
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
-        chooseGroupButton = (CardView)findViewById(R.id.group_card);
+        //Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+
+        String currentDate = dateFormat.format(new Date());
+        startDateButton = findViewById(R.id.start_date_picker);
+        startDateText = findViewById(R.id.start_date);
+        startDateText.setText(currentDate);
+
+        deadlineButton = findViewById(R.id.deadline_date_picker);
+        deadlineText = findViewById(R.id.deadline_date);
+        deadlineText.setText(R.string.deadline);
+
+        chooseGroupButton = findViewById(R.id.group_card);
         chooseGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,21 +143,25 @@ public class CreateGoalActivity extends AppCompatActivity {
             }
         });
 
-        groupName = (TextView)findViewById(R.id.group_name);
-        groupMemberList = (TextView)findViewById(R.id.group_member_list);
+        groupName = findViewById(R.id.group_name);
+        groupMemberList = findViewById(R.id.group_member_list);
 
         groupName.setText("");
         groupMemberList.setText("");
 
-        createGoalButton = (Button)findViewById(R.id.create_goal_button);
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) {
+            return;
+        }
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        final DatabaseReference myRef = database.getReference().child("goals");
+
+        createGoalButton = findViewById(R.id.create_goal_button);
         createGoalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StringBuilder title = new StringBuilder();
-                title.append(actionText.getText()).append(" ")
-                        .append(amountText.getText()).append(" ")
-                        .append(unitText.getText());
-
                 String startText = startDateText.getText().toString();
                 String[] startParts = startText.split("/");
                 int startMonth = Integer.parseInt(startParts[0])-1;
@@ -144,43 +184,40 @@ public class CreateGoalActivity extends AppCompatActivity {
                 deadlineDate.set(Calendar.DAY_OF_MONTH, deadDay);
                 deadlineDate.set(Calendar.YEAR, deadYear);
 
-                Group currentGroup = Singleton.get().getCurrentGroup();
                 Goal goal;
-                if(currentGroup != null) {
-                    goal = new Goal(title.toString(), unitText.getText().toString(),
-                            Integer.parseInt(amountText.getText().toString()), 0, deadlineDate.getTime(), startDate.getTime(),
-                            Singleton.get().getCurrentGroup().getName());
-                } else {
-                    goal = new Goal(title.toString(), unitText.getText().toString(),
-                            Integer.parseInt(amountText.getText().toString()), 0, deadlineDate.getTime(), startDate.getTime(),
-                            "Just Me");
+                GoalWrapper goalWrapper;
+                switch(goalTypeSpinner.getSelectedItem().toString()) {
+                    case "Habit":
+                        goal = new HabitGoal(createHabitFragment.getDescription(),
+                                createHabitFragment.getFrequencyType(),
+                                createHabitFragment.getFrequencyMap(), createHabitFragment.getSeekBarValue(),
+                                deadlineDate.getTime(), startDate.getTime(), groupName.getText().toString());
+                        goalWrapper = new HabitGoalWrapper((HabitGoal)goal);
+                        break;
+                    case "Project":
+                        goal = new TaskGoal(createTaskFragment.getTaskTree());
+                        goalWrapper = new TaskGoalWrapper((TaskGoal)goal);
+                        break;
+                    default:
+                        goal = new SmartGoal(createSmartFragment.getAction(), createSmartFragment.getUnit(),
+                                Integer.parseInt(createSmartFragment.getAmount()),0,
+                                deadlineDate.getTime(), startDate.getTime(), groupName.getText().toString());
+                        goalWrapper = new SmartGoalWrapper((SmartGoal)goal);
                 }
-
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference().child("goals");
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Singleton.get().addGoal(dataSnapshot.getValue(Goal.class));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.w("Create Goal", "Failed to read value.", databaseError.toException());
-                    }
-                });
 
                 String key = myRef.push().getKey();
                 myRef.child(key).setValue(goal);
-                myRef.getParent().child("users").child(user.getUid()).child("goals").child(key).setValue(goal.getTitle());
-                myRef.getParent().child("groups").child(goalGroupKey).child("goals").child(key).setValue(goal.getTitle());
+                myRef.getParent().child("users").child(user.getUid()).child("goals").child(key).setValue(goalWrapper.getTitle());
+                for(Map.Entry<String, String> member : goalGroup.getMembers().entrySet()) {
+                    myRef.getParent().child("users").child(member.getKey()).child("goals").child(key).setValue(goalWrapper.getTitle());
+                }
+                myRef.getParent().child("groups").child(goalGroupKey).child("goals").child(key).setValue(goalWrapper.getTitle());
                 finish();
             }
         });
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_create_goal);
+        Toolbar toolbar = findViewById(R.id.toolbar_create_goal);
+
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -196,15 +233,44 @@ public class CreateGoalActivity extends AppCompatActivity {
 
     public void initializeGroupCard() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) {
+            return;
+        }
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/groups");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(Singleton.get().getCurrentGroupName() == null) {
+                if(groupName.getText().toString().equals("")) {
                     goalGroupKey = dataSnapshot.getChildren().iterator().next().getKey();
                 } else {
                     for(DataSnapshot dataGroup : dataSnapshot.getChildren()) {
-                        if(dataGroup.getValue().equals(Singleton.get().getCurrentGroupName())) {
+                        if(dataGroup.getValue() == null) {
+                            return;
+                        }
+                        if(dataGroup.getValue().equals(groupName.getText().toString())) {
+                            goalGroupKey = dataGroup.getKey();
+                        }
+                    }
+                }
+                retrieveGroup();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //handle databaseError
+            }
+        });
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(groupName.getText().toString().equals("")) {
+                    goalGroupKey = dataSnapshot.getChildren().iterator().next().getKey();
+                } else {
+                    for(DataSnapshot dataGroup : dataSnapshot.getChildren()) {
+                        if(dataGroup.getValue() == null) {
+                            return;
+                        }
+                        if(dataGroup.getValue().equals(groupName.getText().toString())) {
                             goalGroupKey = dataGroup.getKey();
                         }
                     }
@@ -225,10 +291,16 @@ public class CreateGoalActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                groupList = new ArrayList<Group>();
-                groupNames = new ArrayList<String>();
+                if(user == null) {
+                    return;
+                }
+                groupList = new ArrayList<>();
+                groupNames = new ArrayList<>();
                 for(DataSnapshot dataGroup : dataSnapshot.getChildren()) {
                     goalGroup = dataGroup.getValue(Group.class);
+                    if(goalGroup == null) {
+                        return;
+                    }
                     if(goalGroup.getMembers().containsKey(user.getUid())) {
                         groupNames.add(dataGroup.child("name").getValue(String.class));
                         groupList.add(goalGroup);
@@ -236,12 +308,40 @@ public class CreateGoalActivity extends AppCompatActivity {
                     if(goalGroupKey.equals(dataGroup.getKey())) {
                         groupName.setText(goalGroup.getName());
                         groupMemberList.setText(goalGroup.getMemberList());
-                        Singleton.get().setCurrentGroup(goalGroup);
-
                     }
                 }
 
 
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user == null) {
+                    return;
+                }
+                groupList = new ArrayList<>();
+                groupNames = new ArrayList<>();
+                for(DataSnapshot dataGroup : dataSnapshot.getChildren()) {
+                    goalGroup = dataGroup.getValue(Group.class);
+                    if(goalGroup == null) {
+                        return;
+                    }
+                    if(goalGroup.getMembers().containsKey(user.getUid())) {
+                        groupNames.add(dataGroup.child("name").getValue(String.class));
+                        groupList.add(goalGroup);
+                    }
+                    if(goalGroupKey.equals(dataGroup.getKey())) {
+                        groupName.setText(goalGroup.getName());
+                        groupMemberList.setText(goalGroup.getMemberList());
+                    }
+                }
             }
 
             @Override
@@ -277,8 +377,7 @@ public class CreateGoalActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // positive button logic
-                        String groupName = items[selected];
-                        Singleton.get().setCurrentGroupName(groupName);
+                        groupName.setText(items[selected]);
                         initializeGroupCard();
                     }
                 });
@@ -311,43 +410,5 @@ public class CreateGoalActivity extends AppCompatActivity {
     public void showDeadlinePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "deadlinePicker");
-    }
-
-    public void show() {
-        final Dialog npDialog = new Dialog(this);
-        npDialog.setTitle("Set Amount");
-        npDialog.setContentView(R.layout.numberpicker_layout);
-        Button setBtn = (Button) npDialog.findViewById(R.id.setBtn);
-        Button cnlBtn = (Button) npDialog.findViewById(R.id.CancelButton_NumberPicker);
-
-        final NumberPicker numberPicker = (NumberPicker) npDialog.findViewById(R.id.numberPicker);
-        numberPicker.setMaxValue(1000000);
-        numberPicker.setMinValue(0);
-        numberPicker.setWrapSelectorWheel(false);
-        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                // TODO Auto-generated method stub
-            }
-        });
-        setBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextView amount = (TextView) findViewById(R.id.amount);
-                String number = String.valueOf(numberPicker.getValue());
-                amount.setText(number);
-
-                npDialog.dismiss();
-            }
-        });
-
-        cnlBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                npDialog.dismiss();
-            }
-        });
-
-        npDialog.show();
     }
 }

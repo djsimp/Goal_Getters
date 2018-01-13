@@ -3,7 +3,7 @@ package org.truthdefender.goalgetters.goals;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.app.FragmentManager;
+import android.support.v4.app.FragmentManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.truthdefender.goalgetters.R;
-import org.truthdefender.goalgetters.groupchannel.GroupChatFragment;
 import org.truthdefender.goalgetters.main.MainActivity;
 import org.truthdefender.goalgetters.model.Person;
 import org.truthdefender.goalgetters.model.Progress;
@@ -36,7 +35,7 @@ public class GroupActivity extends AppCompatActivity {
 
     GroupMembersFragment groupMembersFragment;
     GroupGoalsFragment groupGoalsFragment;
-    //GroupChatFragment groupChatFragment;
+    GroupChatFragment groupChatFragment;
     TextView groupName;
 
 
@@ -51,8 +50,11 @@ public class GroupActivity extends AppCompatActivity {
         if(groupGoalsFragment == null) {
             groupGoalsFragment = new GroupGoalsFragment();
         }
+        if(groupChatFragment == null) {
+            groupChatFragment = new GroupChatFragment();
+        }
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.group_frame, groupMembersFragment)
                 .addToBackStack(null)
@@ -72,7 +74,7 @@ public class GroupActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                FragmentManager menuFragmentManager = getFragmentManager();
+                FragmentManager menuFragmentManager = getSupportFragmentManager();
                 switch(item.getItemId()) {
                     case R.id.nav_edit_members:
                         menuFragmentManager.beginTransaction()
@@ -86,13 +88,12 @@ public class GroupActivity extends AppCompatActivity {
                                 .addToBackStack(null)
                                 .commit();
                         break;
-//                    case R.id.nav_chat:
-//                        groupGoalCard.setClickable(false);
-//                        menuFragmentManager.beginTransaction()
-//                                .replace(R.id.progress_frame, groupChatFragment)
-//                                .addToBackStack(null)
-//                                .commit();
-//                        break;
+                    case R.id.nav_chat:
+                        menuFragmentManager.beginTransaction()
+                                .replace(R.id.progress_frame, groupChatFragment)
+                                .addToBackStack(null)
+                                .commit();
+                        break;
                 }
                 return true;
             }

@@ -3,7 +3,7 @@ package org.truthdefender.goalgetters.goals;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,8 +17,15 @@ import android.widget.TextView;
 
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Goal;
+import org.truthdefender.goalgetters.model.GoalWrapper;
 import org.truthdefender.goalgetters.model.Group;
+import org.truthdefender.goalgetters.model.HabitGoal;
+import org.truthdefender.goalgetters.model.HabitGoalWrapper;
 import org.truthdefender.goalgetters.model.Person;
+import org.truthdefender.goalgetters.model.SmartGoal;
+import org.truthdefender.goalgetters.model.SmartGoalWrapper;
+import org.truthdefender.goalgetters.model.TaskGoal;
+import org.truthdefender.goalgetters.model.TaskGoalWrapper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,7 +76,7 @@ public class GroupGoalsFragment extends Fragment {
     private List<Goal> generateGoals() {
         List<Goal> goals = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
-            goals.add(new Goal("This is a Great Goal", "$", 5000, 2500, Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), "Hello"));
+            goals.add(new SmartGoal("This is a Great Goal", "$", 5000, 2500, Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), "Hello"));
         }
         return goals;
     }
@@ -121,16 +128,24 @@ public class GroupGoalsFragment extends Fragment {
 
         private void bindGoal(Goal goal) {
             mGoal = goal;
-            mGoalTitle.setText(goal.getTitle());
+            GoalWrapper goalWrapper;
+            if(mGoal instanceof SmartGoal) {
+                goalWrapper = new SmartGoalWrapper((SmartGoal)mGoal);
+            } else if(mGoal instanceof TaskGoal) {
+                goalWrapper = new TaskGoalWrapper((TaskGoal)mGoal);
+            } else { // if(mGoal instanceof HabitGoal) {
+                goalWrapper = new HabitGoalWrapper((HabitGoal)mGoal);
+            }
+            mGoalTitle.setText(goalWrapper.getTitle());
             mDaysLeft.setText("21 Days Left");
             LinearLayout.LayoutParams progParams = new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT,
-                    (float)(goal.getProgress() / goal.getGoal())
+                    goalWrapper.getPercentComplete()
             );
             mProgressBar.setLayoutParams(progParams);
             LinearLayout.LayoutParams invProgParams = new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT,
-                    (float)(1 - (goal.getProgress() / goal.getGoal()))
+                    goalWrapper.getPercentLeft()
             );
             mInvProgressBar.setLayoutParams(invProgParams);
         }

@@ -3,7 +3,6 @@ package org.truthdefender.goalgetters.main;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,42 +24,51 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Goal;
-import org.truthdefender.goalgetters.model.Singleton;
+import org.truthdefender.goalgetters.model.SmartGoal;
 import org.truthdefender.goalgetters.model.User;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 public class CreateAccountActivity extends AppCompatActivity {
     private static final String TAG = "CreateAccountActivity";
     private boolean joinSuccess;
 
-    @InjectView(R.id.input_name) EditText _nameText;
-    @InjectView(R.id.input_email) EditText _emailText;
-    @InjectView(R.id.input_password) EditText _passwordText;
-    @InjectView(R.id.button_join) Button _signupButton;
-    @InjectView(R.id.link_login) TextView _loginLink;
-    @InjectView(R.id.profile_icon_button) ImageButton _imageButton;
+    private EditText mNameText;
+    private EditText mEmailText;
+    private EditText mPasswordText;
+    private Button mSignupButton;
+    private TextView mLoginLink;
+    private ImageButton mImageButton;
+    private int profileImageTag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
-        ButterKnife.inject(this);
+
+        mNameText = (EditText)findViewById(R.id.input_name);
+        mEmailText = (EditText)findViewById(R.id.input_email);
+        mPasswordText = (EditText)findViewById(R.id.input_password);
+        mSignupButton = (Button)findViewById(R.id.button_join);
+        mLoginLink = (TextView)findViewById(R.id.link_login);
+        mImageButton = (ImageButton)findViewById(R.id.profile_icon_button);
+
+        String email = getIntent().getStringExtra("email");
+        if(email != null) {
+            mEmailText.setText(email);
+        }
 
         joinSuccess = false;
 
-        _signupButton.setOnClickListener(new View.OnClickListener() {
+        mSignupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signup();
             }
         });
 
-        _loginLink.setOnClickListener(new View.OnClickListener() {
+        mLoginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CreateAccountActivity.this, LoginActivity.class);
@@ -69,13 +77,13 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
 
-        _emailText.setText(Singleton.get().getUser().getEmail());
-
-        _imageButton.setImageResource(Singleton.get().getUser().getProfileImageTag());
-        _imageButton.setOnClickListener(new View.OnClickListener() {
+        profileImageTag = getIntent().getIntExtra("imageTag", R.drawable.african);
+        mImageButton.setImageResource(profileImageTag);
+        mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CreateAccountActivity.this, SelectIconActivity.class);
+                intent.putExtra("imageTag", profileImageTag);
                 startActivity(intent);
                 finish();
             }
@@ -103,7 +111,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             return;
         }
 
-        _signupButton.setEnabled(false);
+        mSignupButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(CreateAccountActivity.this,
                 R.style.AppTheme_PopupOverlay);
@@ -111,12 +119,12 @@ public class CreateAccountActivity extends AppCompatActivity {
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
 
-        String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        String name = mNameText.getText().toString();
+        String email = mEmailText.getText().toString();
+        String password = mPasswordText.getText().toString();
 
 
-        Singleton.get().getmAuth().createUserWithEmailAndPassword(email, password)
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -144,34 +152,33 @@ public class CreateAccountActivity extends AppCompatActivity {
 
 
     public void onSignupSuccess() {
-        _signupButton.setEnabled(true);
-        Singleton.get().setUser(new User(_nameText.getText().toString(), _emailText.getText().toString(),
-                Singleton.get().getUser().getProfileImageTag()));
+        mSignupButton.setEnabled(true);
+        User newUser = new User(mNameText.getText().toString(), mEmailText.getText().toString(),
+                profileImageTag);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userId = user.getUid();
-        Singleton.get().setUserId(userId);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
-        myRef.child(userId).setValue(Singleton.get().getUser());
+        myRef.child(userId).setValue(newUser);
 
         String groupKey = myRef.getParent().child("groups").push().getKey();
         myRef.getParent().child("groups").child(groupKey).child("name").setValue("Just Me");
-        myRef.getParent().child("groups").child(groupKey).child("members").child(userId).setValue(Singleton.get().getUser().getName());
+        myRef.getParent().child("groups").child(groupKey).child("members").child(userId).setValue(newUser.getName());
         myRef.child(userId).child("groups").child(groupKey).setValue("Just Me");
 
         GregorianCalendar today = (GregorianCalendar)Calendar.getInstance();
         int dayOfMonth = today.get(Calendar.DAY_OF_MONTH);
         GregorianCalendar tomorrow = (GregorianCalendar)Calendar.getInstance();
         tomorrow.set(Calendar.DAY_OF_MONTH, dayOfMonth + 1);
-        Goal firstGoal = new Goal("Create 1 Goal", "goals", 1, 0, tomorrow.getTime(), today.getTime());
+        Goal firstGoal = new SmartGoal("Create", "goals", 1, 0, tomorrow.getTime(), today.getTime());
 
         String goalKey = myRef.getParent().child("goals").push().getKey();
         myRef.getParent().child("goals").child(goalKey).setValue(firstGoal);
         myRef.getParent().child("goals").child(goalKey).child("group").setValue(groupKey);
         myRef.child(userId).child("goals").child(goalKey).setValue("Create 1 Goal");
 
-        myRef.getParent().child("groups").child(groupKey).child("goals").child(goalKey).setValue("Create 1 Goal");
+        myRef.getParent().child("groups").child(groupKey).child("goals").child(goalKey).setValue("Create 1 goal");
 
         Intent intent = new Intent(CreateAccountActivity.this, MainActivity.class);
         startActivity(intent);
@@ -180,35 +187,35 @@ public class CreateAccountActivity extends AppCompatActivity {
     public void onSignupFailed() {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 
-        _signupButton.setEnabled(true);
+        mSignupButton.setEnabled(true);
     }
 
     public boolean validate() {
         boolean valid = true;
 
-        String name = _nameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        String name = mNameText.getText().toString();
+        String email = mEmailText.getText().toString();
+        String password = mPasswordText.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
-            _nameText.setError("at least 3 characters");
+            mNameText.setError("at least 3 characters");
             valid = false;
         } else {
-            _nameText.setError(null);
+            mNameText.setError(null);
         }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+            mEmailText.setError("enter a valid email address");
             valid = false;
         } else {
-            _emailText.setError(null);
+            mEmailText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            mPasswordText.setError("between 4 and 10 alphanumeric characters");
             valid = false;
         } else {
-            _passwordText.setError(null);
+            mPasswordText.setError(null);
         }
 
         return valid;

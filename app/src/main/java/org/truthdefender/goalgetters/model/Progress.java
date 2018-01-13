@@ -14,14 +14,12 @@ public class Progress {
     String date;
     String report;
     String userId;
-    String name;
     int amount;
 
-    public Progress(String date, String report, String userId, String name, int amount) {
+    public Progress(String date, String report, String userId, int amount) {
         this.date = date;
         this.report = report;
         this.userId = userId;
-        this.name = name;
         this.amount = amount;
     }
 
@@ -46,7 +44,7 @@ public class Progress {
     public String getLog() {
         StringBuilder sb = new StringBuilder();
         sb.append(amount).append(" ")
-                .append(Singleton.get().getCurrentGoal().getUnits()).append(" - ").append(report);
+                .append(" - ").append(report);
         return sb.toString();
     }
 
@@ -56,14 +54,6 @@ public class Progress {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getAmount() {

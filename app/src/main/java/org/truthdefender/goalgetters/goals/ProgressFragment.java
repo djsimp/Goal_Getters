@@ -1,24 +1,28 @@
 package org.truthdefender.goalgetters.goals;
 
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.truthdefender.goalgetters.R;
+import org.truthdefender.goalgetters.model.Goal;
+import org.truthdefender.goalgetters.model.GoalWrapper;
 import org.truthdefender.goalgetters.model.Person;
 import org.truthdefender.goalgetters.model.Progress;
-import org.truthdefender.goalgetters.model.Singleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,10 @@ import java.util.List;
 public class ProgressFragment extends Fragment {
 
     private RecyclerView mMemberRecyclerView;
+    private List<Progress> progressLog;
+    private GoalWrapper goalWrapper;
+    private String goalId;
+    private Goal goal;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,17 +49,16 @@ public class ProgressFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.fragment_progress, container, false);
 
+        if (getArguments() != null) {
+            goalId = getArguments().getString("goalId");
+        }
+
         mMemberRecyclerView = (RecyclerView)v.findViewById(R.id.member_recycler_view);
         mMemberRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        updateUI();
+        initializeProgressList();
 
         return v;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     private List<Person> generateMembers() {
@@ -60,6 +67,43 @@ public class ProgressFragment extends Fragment {
                 members.add(new Person());
         }
         return members;
+    }
+
+    public void initializeProgressList() {
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("logs/" + goalId);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                progressLog = new ArrayList<Progress>();
+                for (DataSnapshot dataProg : dataSnapshot.getChildren()) {
+                    progressLog.add(dataProg.getValue(Progress.class));
+                }
+                //goalWrapper.setProgressLog(progressList);
+                updateUI();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                progressLog = new ArrayList<Progress>();
+                for (DataSnapshot dataProg : dataSnapshot.getChildren()) {
+                    progressLog.add(dataProg.getValue(Progress.class));
+                }
+                //goalWrapper.setProgressLog(progressList);
+                updateUI();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     //Recycler view copy
@@ -138,7 +182,7 @@ public class ProgressFragment extends Fragment {
         //Recycler view copy
 
         private void updateProgressUI() {
-            List<Progress> log = Singleton.get().getCurrentGoal().getProgressLog();
+            List<Progress> log = goalWrapper.getProgressLog();
 
             ProgressAdapter mProgressAdapter = new ProgressAdapter(log);
             mProgressLogRecyclerView.setAdapter(mProgressAdapter);

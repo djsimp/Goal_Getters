@@ -12,7 +12,7 @@
         android:id="@+id/goal_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:text="PLACE HOLDER GOAL NAME"/>
 
     <RelativeLayout
@@ -81,8 +81,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:textAlignment="textStart"
+            android:layout_gravity="start"
             android:text="5 miles ahead"
-            android:textSize="15dp"/>
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/days_left"
@@ -90,8 +91,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:textAlignment="textEnd"
+            android:layout_gravity="end"
             android:text="19 days left"
-            android:textSize="15dp"/>
+            android:textSize="15sp"/>
 
 
     </LinearLayout>

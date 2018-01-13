@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="goal_type_array">
+        <item>Goal</item>
+        <item>Project</item>
+        <item>Habit</item>
+    </string-array>
+</resources>

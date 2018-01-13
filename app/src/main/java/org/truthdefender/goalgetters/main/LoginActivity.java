@@ -9,7 +9,7 @@ import android.util.Log;
 import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
+import android.support.v7.widget.AppCompatButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,14 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.truthdefender.goalgetters.R;
-import org.truthdefender.goalgetters.model.Goal;
-import org.truthdefender.goalgetters.model.Singleton;
 import org.truthdefender.goalgetters.model.User;
-
-import java.util.ArrayList;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -41,27 +34,34 @@ public class LoginActivity extends AppCompatActivity {
     private String email;
     private String password;
     private boolean loginSuccess;
-
-    @InjectView(R.id.section_title_text) TextView _sectionTitle;
-    @InjectView(R.id.input_email) EditText _emailText;
-    @InjectView(R.id.input_password) EditText _passwordText;
-    @InjectView(R.id.button_login) Button _loginButton;
-    @InjectView(R.id.link_signup) TextView _signupLink;
+    
+    private TextView mSectionTitle;
+    private EditText mEmailText;
+    private EditText mPasswordText;
+    private AppCompatButton mLoginButton;
+    private TextView mSignupLink;
+    private String userId;
+    private FirebaseAuth mAuth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.inject(this);
+        
+        mSectionTitle = (TextView)findViewById(R.id.section_title_text);
+        mEmailText = (EditText)findViewById(R.id.input_email);
+        mPasswordText = (EditText)findViewById(R.id.input_password);
+        mLoginButton = (AppCompatButton) findViewById(R.id.button_login);
+        mSignupLink = (TextView)findViewById(R.id.link_signup); 
 
-        _sectionTitle.setText("GOAL GETTERS");
-        _sectionTitle.setTextSize(70);
-        _sectionTitle.setHeight(200);
-        _sectionTitle.setGravity(Gravity.CENTER);
+        mSectionTitle.setText("GOAL GETTERS");
+        mSectionTitle.setTextSize(70);
+        mSectionTitle.setHeight(200);
+        mSectionTitle.setGravity(Gravity.CENTER);
 
-        Singleton.get().setmAuth(FirebaseAuth.getInstance());
+        mAuth = FirebaseAuth.getInstance();
 
-        Singleton.get().setmAuthListener(new FirebaseAuth.AuthStateListener() {
+        mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        _loginButton.setOnClickListener(new View.OnClickListener() {
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -84,14 +84,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        _signupLink.setOnClickListener(new View.OnClickListener() {
+        mSignupLink.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Singleton.get().setUser(new User(null, _emailText.getText().toString(), Singleton.get().getThumbIds()[0]));
                 Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
+                intent.putExtra("email", mEmailText.getText().toString());
                 startActivity(intent);
-                finish();
             }
         });
     }
@@ -99,15 +98,18 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        Singleton.get().getmAuth().addAuthStateListener(Singleton.get().getmAuthListener());
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null) {
+            userId = currentUser.getUid();
+            switchToMainActivity();
+        }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (Singleton.get().getmAuthListener() != null) {
-            Singleton.get().getmAuth().removeAuthStateListener(Singleton.get().getmAuthListener());
-        }
+    public void switchToMainActivity() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra("userId", userId);
+        startActivity(intent);
     }
 
     public void login() {
@@ -120,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
 
         loginSuccess = false;
 
-        _loginButton.setEnabled(false);
+        mLoginButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_PopupOverlay);
@@ -128,10 +130,10 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        email = _emailText.getText().toString();
-        password = _passwordText.getText().toString();
+        email = mEmailText.getText().toString();
+        password = mPasswordText.getText().toString();
 
-        Singleton.get().getmAuth().signInWithEmailAndPassword(email, password)
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -148,8 +150,8 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             if (user != null) {
-                                initializeUser(user.getUid());
-                                Singleton.get().setUserId(user.getUid());
+                                //initializeUser(user.getUid());
+                                userId = user.getUid();
                                 onLoginSuccess();
                             } else {
                                 onLoginFailed();
@@ -174,51 +176,54 @@ public class LoginActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    public void initializeUser(String userId) {
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/" + userId);
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Singleton.get().setUser(dataSnapshot.getValue(User.class));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    public void initializeUser(String userId) {
+//        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/" + userId);
+//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                ).setUser(dataSnapshot.getValue(User.class));
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     public void onLoginSuccess() {
-        _loginButton.setEnabled(true);
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
+        mLoginButton.setEnabled(true);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null) {
+            userId = currentUser.getUid();
+            switchToMainActivity();
+        }
     }
 
     public void onLoginFailed() {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 
-        _loginButton.setEnabled(true);
+        mLoginButton.setEnabled(true);
     }
 
     public boolean validate() {
         boolean valid = true;
 
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        String email = mEmailText.getText().toString();
+        String password = mPasswordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+            mEmailText.setError("enter a valid email address");
             valid = false;
         } else {
-            _emailText.setError(null);
+            mEmailText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            mPasswordText.setError("between 4 and 10 alphanumeric characters");
             valid = false;
         } else {
-            _passwordText.setError(null);
+            mPasswordText.setError(null);
         }
 
         return valid;

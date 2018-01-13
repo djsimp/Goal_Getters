@@ -7,21 +7,25 @@
         android:id="@+id/progress_item_name"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.25"
+        android:layout_weight="0.3"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="10dp"
-        android:textSize="18sp"/>
+        android:layout_marginRight="20dp"
+        android:textSize="18sp"
+        android:text="Benjamin Wallace"
+        android:textAlignment="textEnd"/>
 
     <TextView
         android:id="@+id/progress_item_text"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.75"
+        android:layout_weight="0.7"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
         android:textSize="18sp"
+        android:text="150 dollars - Let's make this progress item look really good."
         android:layout_toRightOf="@+id/progress_item_date"
         android:layout_toEndOf="@+id/progress_item_date"
         android:layout_gravity="bottom"/>

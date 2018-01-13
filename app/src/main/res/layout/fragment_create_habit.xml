@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="22dp"
+    android:layout_marginBottom="20dp"
+    tools:context="org.truthdefender.goalgetters.goals.CreateHabitFragment">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_habit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/edittext_habit"
+            android:hint="@string/habit_name"
+            android:inputType="textCapSentences"
+            android:imeOptions="actionDone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/frequency_type"
+            android:textSize="16sp"/>
+
+        <Spinner
+            android:id="@+id/freq_type_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/freq_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="7"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center" >
+
+    </GridView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/target"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/target_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/target_percent"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/target_seek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

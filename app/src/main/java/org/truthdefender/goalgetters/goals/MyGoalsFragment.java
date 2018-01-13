@@ -1,9 +1,9 @@
 package org.truthdefender.goalgetters.goals;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,24 +25,30 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.truthdefender.goalgetters.R;
 import org.truthdefender.goalgetters.model.Goal;
-import org.truthdefender.goalgetters.model.Group;
-import org.truthdefender.goalgetters.model.Person;
-import org.truthdefender.goalgetters.model.Singleton;
+import org.truthdefender.goalgetters.model.GoalWrapper;
+import org.truthdefender.goalgetters.model.HabitGoal;
+import org.truthdefender.goalgetters.model.HabitGoalWrapper;
+import org.truthdefender.goalgetters.model.SmartGoal;
+import org.truthdefender.goalgetters.model.SmartGoalWrapper;
+import org.truthdefender.goalgetters.model.TaskGoal;
+import org.truthdefender.goalgetters.model.TaskGoalWrapper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MyGoalsFragment extends Fragment {
 
     private RecyclerView mGoalsRecyclerView;
-    private FloatingActionButton createGoalButton;
 
-    static List<String> goalList = new ArrayList<>();
-    static List<Goal> myGoals = new ArrayList<>();
+//    static List<String> smartGoalList = new ArrayList<>();
+//    static List<String> habitGoalList = new ArrayList<>();
+//    static List<String> taskGoalList = new ArrayList<>();
+    static HashMap<String, Goal> myGoals = new HashMap<>();
+//    static HashMap<String, Goal> completedGoals = new HashMap<String, Goal>();
+
+    static List<String> goalIds;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,14 +57,13 @@ public class MyGoalsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.fragment_my_goals, container, false);
 
-        mGoalsRecyclerView = (RecyclerView)v.findViewById(R.id.my_goals_recycler_view);
-        mGoalsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mGoalsRecyclerView = v.findViewById(R.id.my_goals_recycler_view);
 
-        createGoalButton = (FloatingActionButton)v.findViewById(R.id.create_goal_button);
+        FloatingActionButton createGoalButton = v.findViewById(R.id.create_goal_button);
         createGoalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,96 +71,278 @@ public class MyGoalsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        getMyGoals();
         return v;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        initializeGoalsList();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        updateGoals();
+//    }
 
-    public void initializeGoalsList() {
+    public void getMyGoals() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/goals");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                goalList = new ArrayList<String>();
-                for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
-                        goalList.add(dataGoal.getKey());
+        if(user != null) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/goals");
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    goalIds = new ArrayList<>();
+                    myGoals = new HashMap<>();
+                    for (DataSnapshot goalId : dataSnapshot.getChildren()) {
+                        goalIds.add(goalId.getKey());
+                    }
+                    getGoals();
                 }
-                initializeGoals();
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //handle databaseError
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                goalList = new ArrayList<String>();
-                for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
-                        goalList.add(dataGoal.getKey());
                 }
-            }
+            });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //handle databaseError
-            }
-        });
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    goalIds = new ArrayList<>();
+                    myGoals = new HashMap<>();
+                    for (DataSnapshot goalId : dataSnapshot.getChildren()) {
+                        goalIds.add(goalId.getKey());
+                    }
+                    getGoals();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
-    public void initializeGoals() {
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("goals");
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                myGoals = new ArrayList<Goal>();
-                for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
-                    if(goalList.contains(dataGoal.getKey())) {
-                        myGoals.add(dataGoal.getValue(Goal.class));
+    public void getGoals() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("goals");
+        for(final String goalId : goalIds) {
+            ref.child(goalId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String goalType = dataSnapshot.child("type").getValue(String.class);
+                    if (goalType != null) {
+                        Goal goal;
+                        switch(goalType) {
+                            case "habit":
+                                goal = dataSnapshot.getValue(HabitGoal.class);
+                                break;
+                            case "task":
+                                goal = dataSnapshot.getValue(TaskGoal.class);
+                                break;
+                            default:
+                                goal = dataSnapshot.getValue(SmartGoal.class);
+                                break;
+                        }
+                        if(goal != null) {
+                            goal.setGoalId(goalId);
+                            myGoals.put(goalId, goal);
+                        }
                     }
+                    updateUI();
                 }
-                updateUI();
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                myGoals = new ArrayList<Goal>();
-                for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
-                    if(goalList.contains(dataGoal.getKey())) {
-                        myGoals.add(dataGoal.getValue(Goal.class));
-                        myGoals.get(myGoals.size()-1).setGoalId(dataGoal.getKey());
+                }
+            });
+            ref.child(goalId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String goalType = dataSnapshot.child("type").getValue(String.class);
+                    if (goalType != null) {
+                        Goal goal;
+                        switch(goalType) {
+                            case "habit":
+                                goal = dataSnapshot.getValue(HabitGoal.class);
+                                break;
+                            case "task":
+                                goal = dataSnapshot.getValue(TaskGoal.class);
+                                break;
+                            default:
+                                goal = dataSnapshot.getValue(SmartGoal.class);
+                                break;
+                        }
+                        if(goal != null) {
+                            goal.setGoalId(goalId);
+                            myGoals.put(goalId, goal);
+                        }
                     }
+                    updateUI();
                 }
-                updateUI();
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
     }
+
+//    public void updateGoals() {
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+//
+//        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                completedGoals = new HashMap<>();
+//                for(DataSnapshot dataGoal : dataSnapshot.child("goals").getChildren()) {
+//                    if(dataGoal.child("progress").getValue(Integer.class) >= dataGoal.child("goal").getValue(Integer.class)
+//                            || dataGoal.child("stopdate").getValue(Date.class) != null) {
+//                        Goal goal = dataGoal.getValue(Goal.class);
+//                        completedGoals.put(dataGoal.getKey(), goal);
+//                    }
+//                }
+//                initializeGoalsList();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                //handle databaseError
+//            }
+//        });
+//    }
+
+//    public void moveGoalsToPast(HashMap<String, Goal> goals) {
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+//        for(Map.Entry<String, Goal> goal : goals.entrySet()) {
+//            ref.child("goals").child(goal.getKey()).removeValue();
+//            ref.child("past_goals").child(goal.getKey()).setValue(goal.getValue());
+//            ref.child("groups").child(goal.getValue().getGroup()).child("goals").child(goal.getKey()).removeValue();
+//            ref.child("groups").child(goal.getValue().getGroup()).child("past_goals").child(goal.getKey()).setValue(true);
+//            ref.child("users")
+//            for(Group group : Singleton.get().getGroups()) {
+//                if(group.getGoals().containsKey(goal.getKey())) {
+//                    ref.child("groups").child(group.getGroupId())
+//                            .child("goals").child(goal.getKey()).removeValue();
+//                    ref.child("groups").child(group.getGroupId())
+//                            .child("past_goals").child(goal.getKey())
+//                            .setValue(true);
+//                    for(Map.Entry<String, String> member : group.getMembers().entrySet()) {
+//                        ref.child("users").child(member.getKey()).child("goals").child(goal.getKey()).removeValue();
+//                        ref.child("users").child(member.getKey()).child("past_goals").child(goal.getKey()).setValue(true);
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+//    public void initializeGoalsList() {
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/goals");
+//        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                getSmartGoalList(dataSnapshot.child("smart"));
+//                getHabitGoalList(dataSnapshot.child("habit"));
+//                getTaskGoalList(dataSnapshot.child("task"));
+//                initializeGoals();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                //handle databaseError
+//            }
+//        });
+//
+//        ref.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                getSmartGoalList(dataSnapshot.child("smart"));
+//                getHabitGoalList(dataSnapshot.child("habit"));
+//                getTaskGoalList(dataSnapshot.child("task"));
+//                initializeGoals();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                //handle databaseError
+//            }
+//        });
+//    }
+
+//    private void getSmartGoalList(DataSnapshot dataSnapshot) {
+//        smartGoalList = new ArrayList<String>();
+//        for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
+//            smartGoalList.add(dataGoal.getKey());
+//        }
+//    }
+//
+//    private void getHabitGoalList(DataSnapshot dataSnapshot) {
+//        habitGoalList = new ArrayList<String>();
+//        for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
+//            habitGoalList.add(dataGoal.getKey());
+//        }
+//    }
+//
+//    private void getTaskGoalList(DataSnapshot dataSnapshot) {
+//        taskGoalList = new ArrayList<String>();
+//        for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
+//            taskGoalList.add(dataGoal.getKey());
+//        }
+//    }
+//
+//    public void initializeGoals() {
+//        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("goals");
+//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                getGoals(dataSnapshot);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                getGoals(dataSnapshot);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
+
+//    private void getGoals(DataSnapshot dataSnapshot) {
+//        myGoals = new ArrayList<Goal>();
+//        for(DataSnapshot dataGoal : dataSnapshot.getChildren()) {
+//            if(habitGoalList.contains(dataGoal.getKey())) {
+//                myGoals.add(dataGoal.getValue(HabitGoal.class));
+//                myGoals.get(myGoals.size() - 1).setGoalId(dataGoal.getKey());
+//            } else if(smartGoalList.contains(dataGoal.getKey())) {
+//                myGoals.add(dataGoal.getValue(SmartGoal.class));
+//                myGoals.get(myGoals.size() - 1).setGoalId(dataGoal.getKey());
+//            } else if(taskGoalList.contains(dataGoal.getKey())) {
+//                myGoals.add(dataGoal.getValue(TaskGoal.class));
+//                myGoals.get(myGoals.size() - 1).setGoalId(dataGoal.getKey());
+//            }
+//        }
+//        updateUI();
+//    }
 
     //Recycler view copy
 
     private void updateUI() {
-        GoalAdapter mGoalAdapter = new GoalAdapter(myGoals);
-        mGoalsRecyclerView.setAdapter(mGoalAdapter);
+        List<Goal> goals = new ArrayList<>(myGoals.values());
+        GoalAdapter mGoalAdapter = new GoalAdapter(goals);
         mGoalsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mGoalsRecyclerView.setAdapter(mGoalAdapter);
     }
 
     private class GoalHolder extends RecyclerView.ViewHolder {
@@ -164,7 +350,7 @@ public class MyGoalsFragment extends Fragment {
         private LinearLayout mListItemGoal;
         private CardView mGoalCard;
         private TextView mGoalTitle;
-        private View mGoalTotalBar;
+       // private View mGoalTotalBar;
         private View mProgressBar;
         private View mInvProgressBar;
         private View mToDateBar;
@@ -172,54 +358,62 @@ public class MyGoalsFragment extends Fragment {
         private TextView mGoalStatus, mDaysLeft;
 
         private Goal mGoal;
+        private GoalWrapper mGoalWrapper;
 
         private GoalHolder(View itemView) {
             super(itemView);
 
-            mListItemGoal = (LinearLayout) itemView.findViewById(R.id.list_item_goal);
+            mListItemGoal = itemView.findViewById(R.id.list_item_goal);
             mListItemGoal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Singleton.get().setCurrentGoal(mGoal);
                     Intent intent = new Intent(getActivity(), GoalActivity.class);
+                    intent.putExtra("goalId", mGoal.getGoalId());
                     startActivity(intent);
                 }
             });
-            mGoalCard = (CardView)itemView.findViewById(R.id.goal_card);
+            mGoalCard = itemView.findViewById(R.id.goal_card);
             mGoalCard.bringToFront();
-            mGoalTitle = (TextView)itemView.findViewById(R.id.goal_title);
+            mGoalTitle = itemView.findViewById(R.id.goal_title);
             mProgressBar = itemView.findViewById(R.id.progress_bar);
             mInvProgressBar = itemView.findViewById(R.id.inv_progress_bar);
             mToDateBar = itemView.findViewById(R.id.to_date_bar);
             mInvToDateBar = itemView.findViewById(R.id.inv_to_date_bar);
-            mGoalStatus = (TextView)itemView.findViewById(R.id.goal_status);
-            mDaysLeft = (TextView)itemView.findViewById(R.id.days_left);
+            mGoalStatus = itemView.findViewById(R.id.goal_status);
+            mDaysLeft = itemView.findViewById(R.id.days_left);
         }
 
         private void bindGoal(Goal goal) {
             mGoal = goal;
-            mGoalTitle.setText(goal.getTitle());
-            String status = goal.getStatus();
+            if(goal instanceof SmartGoal) {
+                mGoalWrapper = new SmartGoalWrapper((SmartGoal)mGoal);
+            } else if(goal instanceof HabitGoal) {
+                mGoalWrapper = new HabitGoalWrapper((HabitGoal)mGoal);
+            } else if(goal instanceof TaskGoal) {
+                mGoalWrapper = new TaskGoalWrapper((TaskGoal)mGoal);
+            }
+            mGoalTitle.setText(mGoalWrapper.getTitle());
+            String status = mGoalWrapper.getStatus();
             mGoalStatus.setText(status);
-            mDaysLeft.setText(goal.getDaysLeft());
+            mDaysLeft.setText(mGoalWrapper.getDaysLeft());
             LinearLayout.LayoutParams progParams = new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT,
-                    goal.getPercentComplete()
+                    mGoalWrapper.getPercentComplete()
             );
             mProgressBar.setLayoutParams(progParams);
             LinearLayout.LayoutParams invProgParams = new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT,
-                    goal.getPercentLeft()
+                    mGoalWrapper.getPercentLeft()
             );
             mInvProgressBar.setLayoutParams(invProgParams);
             LinearLayout.LayoutParams timeParams = new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT,
-                    goal.getPercentTimeTaken()
+                    mGoalWrapper.getPercentTimeTaken()
             );
             mToDateBar.setLayoutParams(timeParams);
             LinearLayout.LayoutParams invTimeParams = new LinearLayout.LayoutParams(
                     0, ViewGroup.LayoutParams.MATCH_PARENT,
-                    goal.getPercentTimeLeft()
+                    mGoalWrapper.getPercentTimeLeft()
             );
             mInvToDateBar.setLayoutParams(invTimeParams);
         }

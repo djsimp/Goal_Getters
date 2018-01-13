@@ -3,6 +3,7 @@ package org.truthdefender.goalgetters.goals;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -18,6 +19,7 @@ import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
@@ -33,12 +35,14 @@ public class DatePickerFragment extends DialogFragment
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         String tag = this.getTag();
-        if(tag == "startDatePicker") {
-            TextView startDate = (TextView) getActivity().findViewById(R.id.start_date);
-            startDate.setText(String.valueOf(month+1) + "/" + String.valueOf(dayOfMonth) + "/" + String.valueOf(year));
-        } else {
-            TextView deadline = (TextView) getActivity().findViewById(R.id.deadline_date);
-            deadline.setText(String.valueOf(month+1) + "/" + String.valueOf(dayOfMonth) + "/" + String.valueOf(year));
+        if(getActivity() != null) {
+            if (tag != null && tag.equals("startDatePicker")) {
+                TextView startDate = getActivity().findViewById(R.id.start_date);
+                startDate.setText(String.valueOf(month + 1) + "/" + String.valueOf(dayOfMonth) + "/" + String.valueOf(year));
+            } else {
+                TextView deadline = getActivity().findViewById(R.id.deadline_date);
+                deadline.setText(String.valueOf(month + 1) + "/" + String.valueOf(dayOfMonth) + "/" + String.valueOf(year));
+            }
         }
     }
 }

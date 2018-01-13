@@ -47,8 +47,9 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/colorButton"
-        app:itemIconTint="@drawable/selector"
-        app:itemTextColor="@drawable/selector"
         app:menu="@menu/group_nav" />
+        <!--app:itemIconTint="@drawable/selector"-->
+        <!--app:itemTextColor="@drawable/selector"-->
+
 
 </LinearLayout>

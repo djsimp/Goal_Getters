@@ -1,32 +1,19 @@
 package org.truthdefender.goalgetters.goals;
 
-import android.content.Intent;
-import android.icu.text.DateFormat;
 import android.os.Bundle;
-import android.app.FragmentManager;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,76 +25,66 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.truthdefender.goalgetters.R;
-import org.truthdefender.goalgetters.model.Goal;
 import org.truthdefender.goalgetters.model.Group;
-import org.truthdefender.goalgetters.model.Singleton;
 import org.truthdefender.goalgetters.model.User;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-/**
- * Created by dj on 10/18/17.
- */
 
 public class CreateGroupActivity extends AppCompatActivity {
     private RecyclerView mMemberListRecyclerView;
     private RecyclerView mSearchRecyclerView;
-    private Button mCreateGroupButton;
     private TextView mGroupName;
-
-    List<User> memberList;
-    List<User> userList;
+    private Spinner mGroupTypeSpinner;
+    private List<User> memberList;
+    private List<User> userList;
+    private String userName;
 
     String curQuery;
 
-    @Nullable
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
 
-        mSearchRecyclerView = (RecyclerView)findViewById(R.id.search_recycler_view);
+        getUsersName();
+
+        mSearchRecyclerView = findViewById(R.id.search_recycler_view);
         mSearchRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mMemberListRecyclerView = (RecyclerView)findViewById(R.id.member_list_recycler_view);
+        mMemberListRecyclerView = findViewById(R.id.member_list_recycler_view);
         mMemberListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mGroupName = (TextView)findViewById(R.id.group_name);
+        mGroupName = findViewById(R.id.group_name);
 
-        mCreateGroupButton = (Button)findViewById(R.id.create_group_button);
+        mGroupTypeSpinner = findViewById(R.id.group_type_spinner);
+// Create an ArrayAdapter using the string array and a default spinner layout
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.group_type_array, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        mGroupTypeSpinner.setAdapter(adapter);
+
+        Button mCreateGroupButton = findViewById(R.id.create_group_button);
         mCreateGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                HashMap<String, String> finalMemberList = new HashMap<String, String>();
-                finalMemberList.put(user.getUid(), Singleton.get().getUser().getName());
+                if(user == null) {
+                    return;
+                }
+                HashMap<String, String> finalMemberList = new HashMap<>();
+                finalMemberList.put(user.getUid(), userName);
                 for(User member : memberList) {
                     finalMemberList.put(member.getUuid(), member.getName());
                 }
 
-                Group group = new Group(mGroupName.getText().toString(), finalMemberList, null);
+                Group group = new Group(mGroupName.getText().toString(), mGroupTypeSpinner.getSelectedItem().toString(), finalMemberList, null);
 
                 final FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference().child("groups");
-//                myRef.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        Singleton.get().addGoal(dataSnapshot.getValue(Goal.class));
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                        Log.w("Create Goal", "Failed to read value.", databaseError.toException());
-//                    }
-//                });
 
                 String key = myRef.push().getKey();
                 myRef.child(key).setValue(group);
@@ -122,7 +99,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         initializeUserList();
 
-        SearchView mSearchInput = (SearchView)findViewById(R.id.search_input);
+        SearchView mSearchInput = findViewById(R.id.search_input);
         mSearchInput.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -141,7 +118,7 @@ public class CreateGroupActivity extends AppCompatActivity {
             }
         });
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_create_group);
+        Toolbar toolbar = findViewById(R.id.toolbar_create_group);
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -155,12 +132,46 @@ public class CreateGroupActivity extends AppCompatActivity {
         return true;
     }
 
+    public void getUsersName() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) {
+            return;
+        }
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userName = dataSnapshot.child("name").getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userName = dataSnapshot.child("name").getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void initializeUserList() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user == null) {
+                    return;
+                }
                 userList = new ArrayList<>();
                 memberList = new ArrayList<>();
                 for(DataSnapshot dataUser : dataSnapshot.getChildren()) {
@@ -201,7 +212,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         private SearchHolder(View itemView) {
             super(itemView);
 
-            mSearchListItem = (RelativeLayout)itemView.findViewById(R.id.user_list_item);
+            mSearchListItem = itemView.findViewById(R.id.user_list_item);
             mSearchListItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -210,8 +221,8 @@ public class CreateGroupActivity extends AppCompatActivity {
                     updateSearchList(curQuery);
                 }
             });
-            mSearchItemIcon = (ImageView)itemView.findViewById(R.id.user_profile_icon);
-            mSearchName = (TextView)itemView.findViewById(R.id.user_name);
+            mSearchItemIcon = itemView.findViewById(R.id.user_profile_icon);
+            mSearchName = itemView.findViewById(R.id.user_name);
         }
 
         private void bindSearchItem(User user) {
@@ -267,8 +278,8 @@ public class CreateGroupActivity extends AppCompatActivity {
         private MemberListHolder(View itemView) {
             super(itemView);
 
-            mMemberListListItem = (RelativeLayout)itemView.findViewById(R.id.user_list_item);
-            mMemberListListItem.setBackgroundColor(getResources().getColor(R.color.positive_color));
+            mMemberListListItem = itemView.findViewById(R.id.user_list_item);
+            mMemberListListItem.setBackgroundColor(getResources().getColor(R.color.colorAccent));
             mMemberListListItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -277,8 +288,8 @@ public class CreateGroupActivity extends AppCompatActivity {
                     updateSearchList(curQuery);
                 }
             });
-            mMemberListItemIcon = (ImageView)itemView.findViewById(R.id.user_profile_icon);
-            mMemberListName = (TextView)itemView.findViewById(R.id.user_name);
+            mMemberListItemIcon = itemView.findViewById(R.id.user_profile_icon);
+            mMemberListName = itemView.findViewById(R.id.user_name);
         }
 
         private void bindMemberListItem(User user) {

@@ -2,21 +2,8 @@
     <string name="app_name">Goal Getters</string>
     <string name="logo_description">Goal Getters Logo</string>
 
-    <!-- all -->
-    <string name="all_app_version">Sample UI v%1$s / SDK v%2$s</string>
-
-    <string name="all_create">Create</string>
-    <string name="all_invite">Invite</string>
-
-    <string name="all_group_channels">Group Channels</string>
-    <string name="all_open_channels">Open Channels</string>
-
     <!-- main -->
     <string name="main_label">Goal Getters</string>
-
-    <string name="main_drawer_open">Open navigation drawer</string>
-    <string name="main_drawer_close">Close navigation drawer</string>
-    <string name="select_channel_type">Select channel type</string>
 
     <!-- create group -->
     <string name="create_group_label">Create Group</string>
@@ -53,12 +40,14 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
 
     <!-- select profile icon -->
     <string name="select_icon_label">Select Your Profile Icon</string>
+
+    <!-- Profile Activity -->
+    <string name="profile_activity">Edit Profile</string>
+    <string name="save_changes_label">Save Changes</string>
+    <string name="logout_label">Logout</string>
 
     <!-- Menu -->
     <string name="title_goals">Goals</string>
@@ -67,24 +56,7 @@
 
     <string name="back_arrow">Back</string>
 
-    <!-- Open Channel List -->
-    <string name="open_channel_list_participant_count">%1$d participants</string>
-
-    <string name="create_open_channel">Create Open Channel</string>
-    <string name="participant_list">Participants</string>
-
-    <!-- Group Channel List -->
-    <string name="group_channel_list_file_message_text">%1$s has uploaded a file.</string>
-
-    <string name="create_group_channel">Create Group Channel</string>
     <string name="member_list">Members</string>
-    <string name="invite_member">Invite members</string>
-
-    <!-- Content descriptions -->
-    <string name="open_channel_chat_content_desc_profile">Profile image</string>
-
-    <!-- Menu actions -->
-    <string name="action_create_channel">Create channel</string>
 
     <string name="download">Download</string>
     <string name="cancel">Cancel</string>
@@ -92,20 +64,30 @@
     <string name="resend_message">Resend</string>
     <string name="delete_message">Delete</string>
 
-    <!-- Message Status -->
     <string name="message_sending">Sending</string>
     <string name="message_failed">Failed</string>
+    <string name="goal_type">Goal Type:</string>
     <string name="goal_name">Goal Name</string>
+    <string name="habit_name">Habit Name</string>
+    <string name="frequency_type">Frequency Type:</string>
+    <string name="target">Target Percentage: </string>
+    <string name="target_percent">0%</string>
+    <string name="task_placeholder">New Task</string>
+    <string name="project_name">Project Title</string>
+    <string name="go_to_parent">Go to Parent Task</string>
     <string name="deadline">Deadline</string>
     <string name="units">Units</string>
 
+    <string name="current_rating_label">Current Rating: </string>
+    <string name="no_rating">None</string>
 
     <!-- Goal Getters -->
     <string name="create_group">Create Group</string>
     <string name="create_goal">Create Goal</string>
-    <string name="report_progress">REPORT PROGRESS</string>
+    <string name="report_progress">Report Progress</string>
     <string name="description">Description</string>
     <string name="my_goals_title">My Goals</string>
+    <string name="my_past_goals_title">My Past Goals</string>
 
     <string name="title_activity_select_icon">Select Profile Icon</string>
     <string name="title_activity_create_group">Create Group</string>
@@ -114,6 +96,9 @@
     <string name="start_date">Start Date</string>
     <string name="pick_start_date">Choose Start Date</string>
     <string name="pick_deadline">Choose Deadline</string>
+    <string name="logout">Logout</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -16,13 +16,13 @@ public class ReportProgressActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.report_progress_layout);
-        NumberPicker np =(NumberPicker) findViewById(R.id.number_picker);
+        setContentView(R.layout.report_progress_smart_layout);
+        NumberPicker np = findViewById(R.id.number_picker);
 
         np.setMinValue(0);
         np.setMaxValue(1000000);
         np.setWrapSelectorWheel(false);
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar_report_progress);
+        Toolbar toolbar = findViewById(R.id.toolbar_report_progress);
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

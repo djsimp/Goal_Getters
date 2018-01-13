@@ -12,7 +12,6 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
-        android:name=".main.BaseApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
@@ -42,48 +41,18 @@
         <activity
             android:name=".goals.ReportProgressActivity"
             android:label="@string/report_progress_label" />
-        <activity android:name=".utils.PhotoViewerActivity" />
         <activity
-            android:name=".utils.MediaPlayerActivity"
-            android:configChanges="orientation|screenSize" />
-        <activity
-            android:name=".openchannel.CreateOpenChannelActivity"
-            android:label="@string/create_open_channel" />
-        <activity
-            android:name=".groupchannel.InviteMemberActivity"
-            android:label="@string/invite_member" />
-        <activity
-            android:name=".groupchannel.MemberListActivity"
-            android:label="@string/member_list" />
-        <activity
-            android:name=".groupchannel.CreateGroupChannelActivity"
-            android:label="@string/create_group_channel" />
-        <activity
-            android:name=".openchannel.ParticipantListActivity"
-            android:label="@string/participant_list" />
-        <activity android:name=".openchannel.OpenChannelActivity" />
-        <activity android:name=".groupchannel.GroupChannelActivity" />
-        <activity android:name=".main.SelectIconActivity"
+            android:name=".main.SelectIconActivity"
             android:label="@string/select_icon_label"
             android:theme="@style/AppTheme" />
-        <activity android:name=".goals.CreateGroupActivity"
+        <activity
+            android:name=".goals.CreateGroupActivity"
             android:label="@string/title_activity_create_group"
             android:theme="@style/AppTheme" />
-        <activity android:name=".goals.GroupActivity"
+        <activity
+            android:name=".goals.GroupActivity"
             android:label="@string/title_activity_groups"
-            android:theme="@style/AppTheme"/>
-
-        <service android:name=".fcm.MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <service android:name=".fcm.MyFirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
