@@ -195,7 +195,8 @@ public class CreateGoalActivity extends AppCompatActivity {
                         goalWrapper = new HabitGoalWrapper((HabitGoal)goal);
                         break;
                     case "Project":
-                        goal = new TaskGoal(createTaskFragment.getTaskTree());
+                        goal = new TaskGoal(createTaskFragment.getTaskTree(), deadlineDate.getTime(),
+                                startDate.getTime(), groupName.getText().toString());
                         goalWrapper = new TaskGoalWrapper((TaskGoal)goal);
                         break;
                     default:

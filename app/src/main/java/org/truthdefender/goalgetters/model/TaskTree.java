@@ -77,6 +77,10 @@ public class TaskTree {
         return completed;
     }
 
+    public String getCountString() {
+        return getCompletedCount() + "/" + getChildCount();
+    }
+
     public int getChildCount() {
         return this.children.size();
     }

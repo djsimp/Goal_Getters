@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ public class CreateTaskFragment extends Fragment {
     private Stack<TaskTree> taskTreeStack;
     private TaskTree rootTask;
     private RecyclerView mTaskRecyclerView;
+    private TextView childCount;
 
     public CreateTaskFragment() {
         taskTreeStack = new Stack<>();
@@ -44,6 +47,27 @@ public class CreateTaskFragment extends Fragment {
 
         taskName = v.findViewById(R.id.task_name);
         taskName.setText(R.string.project_name);
+        rootTask.setTask("Project Title");
+        taskName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(taskTreeStack.isEmpty()) {
+                    rootTask.setTask(s.toString());
+                } else {
+                    taskTreeStack.peek().setTask(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         upToParent = v.findViewById(R.id.up_to_parent);
         upToParent.setOnClickListener(new View.OnClickListener() {
@@ -72,16 +96,12 @@ public class CreateTaskFragment extends Fragment {
             }
         });
 
-        TextView childCount = v.findViewById(R.id.child_count);
-        childCount.setText(getCount(rootTask));
+        childCount = v.findViewById(R.id.child_count);
+        childCount.setText(rootTask.getCountString());
 
         mTaskRecyclerView = v.findViewById(R.id.child_recycler);
 
         return v;
-    }
-
-    public String getCount(TaskTree curTask) {
-        return curTask.getCompletedCount() + "/" + curTask.getChildCount();
     }
 
     public TaskTree getTaskTree() {
@@ -91,16 +111,29 @@ public class CreateTaskFragment extends Fragment {
     private void updateUI() {
         if(taskTreeStack.isEmpty()) {
             upToParent.setVisibility(View.GONE);
-            taskName.setText(rootTask.getTask());
+            if(rootTask.getTask() == null || rootTask.getTask().equals("")) {
+                taskName.setText(R.string.project_name);
+                rootTask.setTask("Project Title");
+            } else {
+                taskName.setText(rootTask.getTask());
+            }
         } else {
             upToParent.setVisibility(View.VISIBLE);
-            taskName.setText(taskTreeStack.peek().getTask());
+            TaskTree taskTree = taskTreeStack.peek();
+            if(taskTree.getTask() == null || taskTree.getTask().equals("")) {
+                taskName.setText(R.string.task_placeholder);
+                taskTree.setTask("New Task");
+            } else {
+                taskName.setText(taskTree.getTask());
+            }
         }
         List<TaskTree> taskChildren;
         if(taskTreeStack.isEmpty()) {
             taskChildren = new ArrayList<>(rootTask.getChildren());
+            childCount.setText(rootTask.getCountString());
         } else {
             taskChildren = new ArrayList<>(taskTreeStack.peek().getChildren());
+            childCount.setText(taskTreeStack.peek().getCountString());
         }
         TaskAdapter mTaskAdapter = new TaskAdapter(taskChildren);
         mTaskRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -112,6 +145,7 @@ public class CreateTaskFragment extends Fragment {
         private ImageButton mCheckComplete;
         private ImageButton mDeleteX;
         private ImageButton mPlusChild;
+        private ImageButton mDownToChild;
         private TextView mChildCount;
 
 
@@ -120,16 +154,41 @@ public class CreateTaskFragment extends Fragment {
         private TaskHolder(View itemView) {
             super(itemView);
             mTaskName = itemView.findViewById(R.id.task_name);
+            mDownToChild = itemView.findViewById(R.id.down_to_child);
             mCheckComplete = itemView.findViewById(R.id.check_complete);
             mCheckComplete.setVisibility(View.GONE);
             mDeleteX = itemView.findViewById(R.id.delete_x);
             mPlusChild = itemView.findViewById(R.id.plus_child);
+            mPlusChild.setVisibility(View.GONE);
             mChildCount = itemView.findViewById(R.id.child_count);
         }
 
-        private void bindGoal(TaskTree task) {
+        private void bindGoal(final TaskTree task) {
             mTask = task;
-            mTaskName.setText(mTask.getTask());
+            if(mTask.getTask() == null || mTask.getTask().equals("")) {
+                mTaskName.setText(R.string.task_placeholder);
+                task.setTask("New Task");
+                mTask.setTask("New Task");
+            } else {
+                mTaskName.setText(mTask.getTask());
+            }
+            mTaskName.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    task.setTask(s.toString());
+                    mTask.setTask(s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
             mDeleteX.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -137,14 +196,14 @@ public class CreateTaskFragment extends Fragment {
                     updateUI();
                 }
             });
-            mPlusChild.setOnClickListener(new View.OnClickListener() {
+            mDownToChild.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     taskTreeStack.push(mTask);
                     updateUI();
                 }
             });
-            mChildCount.setText(getCount(mTask));
+            mChildCount.setText(mTask.getCountString());
         }
     }
 
@@ -159,7 +218,7 @@ public class CreateTaskFragment extends Fragment {
         @Override
         public TaskHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(R.layout.task_item, parent, false);
+            View view = layoutInflater.inflate(R.layout.task_item_child, parent, false);
             return new TaskHolder(view);
         }
 

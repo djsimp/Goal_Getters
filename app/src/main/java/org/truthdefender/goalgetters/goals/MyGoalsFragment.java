@@ -32,8 +32,10 @@ import org.truthdefender.goalgetters.model.SmartGoal;
 import org.truthdefender.goalgetters.model.SmartGoalWrapper;
 import org.truthdefender.goalgetters.model.TaskGoal;
 import org.truthdefender.goalgetters.model.TaskGoalWrapper;
+import org.truthdefender.goalgetters.model.TaskTree;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -136,7 +138,10 @@ public class MyGoalsFragment extends Fragment {
                                 goal = dataSnapshot.getValue(HabitGoal.class);
                                 break;
                             case "task":
-                                goal = dataSnapshot.getValue(TaskGoal.class);
+                                goal = new TaskGoal(retrieveTaskTree(dataSnapshot.child("taskTree")),
+                                        dataSnapshot.child("startdate").getValue(Date.class),
+                                        dataSnapshot.child("deadline").getValue(Date.class),
+                                        dataSnapshot.child("group").getValue(String.class));
                                 break;
                             default:
                                 goal = dataSnapshot.getValue(SmartGoal.class);
@@ -166,7 +171,10 @@ public class MyGoalsFragment extends Fragment {
                                 goal = dataSnapshot.getValue(HabitGoal.class);
                                 break;
                             case "task":
-                                goal = dataSnapshot.getValue(TaskGoal.class);
+                                goal = new TaskGoal(retrieveTaskTree(dataSnapshot.child("taskTree")),
+                                        dataSnapshot.child("startdate").getValue(Date.class),
+                                        dataSnapshot.child("deadline").getValue(Date.class),
+                                        dataSnapshot.child("group").getValue(String.class));
                                 break;
                             default:
                                 goal = dataSnapshot.getValue(SmartGoal.class);
@@ -186,6 +194,16 @@ public class MyGoalsFragment extends Fragment {
                 }
             });
         }
+    }
+
+    TaskTree retrieveTaskTree(DataSnapshot dataSnapshot) {
+        TaskTree taskTree = new TaskTree(dataSnapshot.child("task").getValue(String.class));
+        if(dataSnapshot.hasChild("children")) {
+            for (DataSnapshot dataChildTree : dataSnapshot.child("children").getChildren()) {
+                taskTree.addChild(retrieveTaskTree(dataChildTree));
+            }
+        }
+        return taskTree;
     }
 
 //    public void updateGoals() {

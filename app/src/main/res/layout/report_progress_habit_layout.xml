@@ -3,21 +3,44 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_report_progress"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_width="match_parent"
-        android:background="@color/colorPrimaryDark"
-        android:theme="@style/ToolBarStyle"
-        android:elevation="4dp"/>
+    <RelativeLayout
+        android:layout_width="166dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/date_picker"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:onClick="showStartDatePickerDialog"
+            android:scaleType="fitCenter"
+            android:src="@drawable/calendar_icon" />
+
+        <TextView
+            android:id="@+id/start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/date_picker"
+            android:layout_toEndOf="@id/date_picker"
+            android:text="10/24/2017"
+            android:textAlignment="center"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:text="@string/current_rating_label"/>
 
         <TextView
@@ -28,8 +51,13 @@
 
     <SeekBar
         style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
+        android:layout_gravity="center"
         android:max="5"
         android:progress="3" />
 
@@ -57,9 +85,11 @@
             style="?android:attr/buttonBarButtonStyle"
             android:layout_height="36dp"
             android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:text="Submit" />
+            android:layout_alignParentEnd="true"
+            android:text="@string/submit" />
 
         <Button
             android:id="@+id/CancelButton_NumberPicker"
@@ -67,12 +97,11 @@
             android:layout_height="36dp"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_toLeftOf="@id/setBtn"
-            android:text="Cancel" />
+            android:layout_toStartOf="@id/setBtn"
+            android:text="@string/cancel" />
 
     </RelativeLayout>
-
-
-
 
 </LinearLayout>

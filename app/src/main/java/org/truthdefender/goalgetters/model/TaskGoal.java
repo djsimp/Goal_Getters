@@ -9,8 +9,18 @@ import java.util.Date;
 public class TaskGoal extends Goal {
     private TaskTree taskTree;
 
-    public TaskGoal(TaskTree taskTree) {
+    public TaskGoal(TaskTree taskTree, Date deadline, Date startdate, String group) {
         this.taskTree = taskTree;
+        super.startdate = startdate;
+        super.deadline = deadline;
+        super.group = group;
+        super.type = "task";
+    }
+
+    public TaskGoal(TaskTree taskTree, Date deadline, Date startdate) {
+        this.taskTree = taskTree;
+        super.startdate = startdate;
+        super.deadline = deadline;
         super.type = "task";
     }
 
@@ -28,35 +38,35 @@ public class TaskGoal extends Goal {
     }
 
     public Date getDeadline() {
-        return deadline;
+        return super.deadline;
     }
 
     public void setDeadline(Date deadline) {
-        this.deadline = deadline;
+        super.deadline = deadline;
     }
 
     public Date getStartdate() {
-        return startdate;
+        return super.startdate;
     }
 
     public void setStartdate(Date startdate) {
-        this.startdate = startdate;
+        super.startdate = startdate;
     }
 
     public Date getStopdate() {
-        return stopdate;
+        return super.stopdate;
     }
 
     public void setStopdate(Date stopdate) {
-        this.stopdate = stopdate;
+        super.stopdate = stopdate;
     }
 
     public String getGroup() {
-        return group;
+        return super.group;
     }
 
     public void setGroup(String group) {
-        this.group = group;
+        super.group = group;
     }
 
     public String getType() { return super.type; }

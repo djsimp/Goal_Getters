@@ -22,17 +22,6 @@ public class ReportProgressActivity extends AppCompatActivity {
         np.setMinValue(0);
         np.setMaxValue(1000000);
         np.setWrapSelectorWheel(false);
-        Toolbar toolbar = findViewById(R.id.toolbar_report_progress);
-        setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
 }

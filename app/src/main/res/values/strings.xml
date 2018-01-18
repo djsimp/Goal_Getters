@@ -80,6 +80,7 @@
 
     <string name="current_rating_label">Current Rating: </string>
     <string name="no_rating">None</string>
+    <string name="submit">Submit</string>
 
     <!-- Goal Getters -->
     <string name="create_group">Create Group</string>
